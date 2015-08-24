@@ -1,22 +1,16 @@
-package com.example.avoscloud_demo;
+package com.example.avoscloud_demo.demo;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import ar.com.daidalos.afiledialog.FileChooserDialog;
 import com.avos.avoscloud.*;
+import com.example.avoscloud_demo.*;
+import com.example.avoscloud_demo.R;
 import junit.framework.Assert;
-
-import java.io.File;
-import java.io.RandomAccessFile;
 
 import static junit.framework.Assert.assertFalse;
 
@@ -159,7 +153,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
   public void testSubUserSignup(final String string) throws AVException {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     LayoutInflater inflater = LayoutInflater.from(this);
-    LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.login_dialog, null);
+    LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
 
     final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
     final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);

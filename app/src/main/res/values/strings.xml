@@ -28,4 +28,8 @@
     <string name="signup">Sign Up</string>
     <string name="login">Login</string>
     <string name="source_code">Show Source Code</string>
+    <string name="title_activity_demo_run">DemoRunActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_run">Run</string>
 </resources>

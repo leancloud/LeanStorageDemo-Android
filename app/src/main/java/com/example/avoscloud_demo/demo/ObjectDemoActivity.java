@@ -1,9 +1,10 @@
-package com.example.avoscloud_demo;
+package com.example.avoscloud_demo.demo;
 
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import com.avos.avoscloud.*;
+import com.example.avoscloud_demo.DemoBaseActivity;
 import junit.framework.Assert;
 
 import java.lang.reflect.Method;

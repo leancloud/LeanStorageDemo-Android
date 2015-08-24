@@ -96,11 +96,11 @@ public class DemoGroupActivity extends ListActivity {
 
   private Map<String, String> myDemoMap() {
     if (demoMap.isEmpty()) {
-      demoMap.put("ObjectDemoActivity", "com.example.avoscloud_demo.ObjectDemoActivity");
-      demoMap.put("UserDemoActivity", "com.example.avoscloud_demo.UserDemoActivity");
-      demoMap.put("FileDemoActivity", "com.example.avoscloud_demo.FileDemoActivity");
-      demoMap.put("SubclassDemoActivity", "com.example.avoscloud_demo.SubclassDemoActivity");
-      demoMap.put("QueryDemoActivity", "com.example.avoscloud_demo.QueryDemoActivity");
+      demoMap.put("ObjectDemoActivity", "com.example.avoscloud_demo.demo.ObjectDemoActivity");
+      demoMap.put("UserDemoActivity", "com.example.avoscloud_demo.demo.UserDemoActivity");
+      demoMap.put("FileDemoActivity", "com.example.avoscloud_demo.demo.FileDemoActivity");
+      demoMap.put("SubclassDemoActivity", "com.example.avoscloud_demo.demo.SubclassDemoActivity");
+      demoMap.put("QueryDemoActivity", "com.example.avoscloud_demo.demo.QueryDemoActivity");
     }
     return demoMap;
   }

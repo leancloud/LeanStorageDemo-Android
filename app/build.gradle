@@ -42,3 +42,32 @@ dependencies {
     //avoscloud-search 为 LeanCloud 应用内搜索包
     compile 'cn.leancloud.android:avoscloud-search:v3.7.2@aar'
 }
+
+task copySource (type: Copy){
+    from 'src/main/java/com/example/avoscloud_demo/demo'
+    into 'src/main/assets'
+}
+
+preBuild.dependsOn copySource
+
+//task list (type: Copy){
+//    File srcDir
+//
+//    // Create a file collection using a closure
+//    FileCollection collection = files { srcDir.listFiles() }
+//
+//    srcDir = file('src/main/java/com/example/avoscloud_demo/demo')
+//    File assetsDir = file('src/main/assets/')
+////    println "Contents of $srcDir.name"
+////    collection.collect { relativePath(it) }.sort().each { println it }
+//
+//    println assetsDir
+//
+//    collection.collect {
+//        println relativePath(it)
+//        println relativePath(assetsDir)
+//        from relativePath(it)
+//        into relativePath(assetsDir)
+//    }
+//
+//}

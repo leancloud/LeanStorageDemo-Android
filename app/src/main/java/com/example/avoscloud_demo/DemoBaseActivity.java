@@ -1,28 +1,25 @@
 package com.example.avoscloud_demo;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
-import com.avos.avoscloud.AVException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DemoBaseActivity extends ListActivity {
 
   static public final String CONTENT_TAG = "content";
+  public static final String METHOD_TAG = "method";
 
   private List<String> codeSnippetList = new ArrayList<String>();
 
@@ -55,31 +52,38 @@ public class DemoBaseActivity extends ListActivity {
     }
   }
 
-  static public String readTextFile(InputStream inputStream) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    byte buf[] = new byte[8 * 1024];
-    int len;
+  private String getFileSourceCode() {
     try {
-      while ((len = inputStream.read(buf)) != -1) {
-        outputStream.write(buf, 0, len);
-      }
-      outputStream.close();
-      inputStream.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+      String name = this.getClass().getSimpleName() + ".java";
+      InputStream inputStream = getAssets().open(name);
+      String content = DemoUtils.readTextFile(inputStream);
+      return content;
+    } catch (Exception e) {
+      showMessage(e.getMessage());
     }
-    return outputStream.toString();
+    return null;
   }
 
   private void showSourceCode() {
     try {
-      String name = this.getClass().getSimpleName() + ".java";
-      InputStream inputStream = getAssets().open(name);
-      String content = readTextFile(inputStream);
-      startSourceCodeActivity(content);
+      startSourceCodeActivity(getFileSourceCode());
     } catch (Exception exception) {
       exception.printStackTrace();
     }
+  }
+
+  private String getMethodSourceCode(String name) {
+    String code = getFileSourceCode();
+    String method = null;
+    String patternString = String.format
+        ("void\\s%s.*?\\{(.*?)\\n\\s\\s\\}\\n", name);
+    Pattern pattern = Pattern.compile(patternString, Pattern.DOTALL);
+    Matcher matcher = pattern.matcher(code);
+    if (matcher.find()) {
+      method = matcher.group(1);
+//      method = matcher.group(1);
+    }
+    return method;
   }
 
   public void setupAdapter() {
@@ -131,51 +135,14 @@ public class DemoBaseActivity extends ListActivity {
     return methods;
   }
 
-  public static Method getMethodSafely(Class<?> cls, String name, Class<?>... parameterTypes) {
-    try {
-      if (cls == null) {
-        return null;
-      }
-      return cls.getMethod(name, parameterTypes);
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    }
-    return null;
-  }
-
-  public static void invokeMethod(Object receiver, Method method, Object... args) throws Exception {
-    if (method == null) {
-      throw new NullPointerException();
-    }
-
-    try {
-      method.invoke(receiver, args);
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      throw exception;
-    }
-  }
-
   protected void onListItemClick(android.widget.ListView l, android.view.View v, int position, long id) {
+    Intent intent = new Intent(this, DemoRunActivity.class);
+    DemoRunActivity.demoActivity = this;
     List<String> array = myTestList();
     String name = array.get(position);
-    Method method = getMethodSafely(this.getClass(), name, String.class);
-    setProgressBarIndeterminateVisibility(true);
-    try {
-      invokeMethod(this, method, method.getName());
-    } catch (Exception exception) {
-      showMessage(null, exception, false);
-    }
-  }
-
-  public void closeQuietly(Closeable closeable) {
-    try {
-      if (closeable != null) {
-        closeable.close();
-      }
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    }
+    intent.putExtra(CONTENT_TAG, getMethodSourceCode(name));
+    intent.putExtra(METHOD_TAG, name);
+    startActivity(intent);
   }
 
 

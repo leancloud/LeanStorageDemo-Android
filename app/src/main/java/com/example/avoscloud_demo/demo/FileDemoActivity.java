@@ -1,9 +1,11 @@
-package com.example.avoscloud_demo;
+package com.example.avoscloud_demo.demo;
 
 import android.app.Dialog;
 import android.widget.Toast;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import com.avos.avoscloud.*;
+import com.example.avoscloud_demo.DemoBaseActivity;
+import com.example.avoscloud_demo.DemoUtils;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -27,7 +29,7 @@ public class FileDemoActivity extends DemoBaseActivity {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      closeQuietly(rf);
+      DemoUtils.closeQuietly(rf);
     }
     return data;
   }

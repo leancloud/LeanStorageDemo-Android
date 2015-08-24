@@ -1,7 +1,8 @@
-package com.example.avoscloud_demo;
+package com.example.avoscloud_demo.demo;
 
 import android.os.AsyncTask;
 import com.avos.avoscloud.*;
+import com.example.avoscloud_demo.DemoBaseActivity;
 import junit.framework.Assert;
 
 import java.util.List;
