@@ -54,6 +54,13 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     //删掉了第一个学生
     student.delete();
     log("删掉了学生：" + student);
+
+    try {
+      AVQuery<Student> query = AVQuery.getQuery(Student.class);
+      query.get(student.getObjectId());
+    } catch (Exception e) {
+      log("再次去获取这个学生，抛出异常：" + e.getMessage());
+    }
   }
 
   public void testGetObject() throws AVException {
@@ -64,12 +71,16 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("用 objectId 创建了对象，并获取了数据：" + fetched);
   }
 
-  public void testCreateObjectWithFile() throws IOException, AVException {
+  byte[] getAvatarBytes() {
     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output);
     byte[] bytes = output.toByteArray();
-    AVFile avatar = new AVFile("avatar", bytes);
+    return bytes;
+  }
+
+  public void testCreateObjectWithFile() throws IOException, AVException {
+    AVFile avatar = new AVFile("avatar", getAvatarBytes());
 
     Student student = new Student();
     student.setName(getClassName());
@@ -190,6 +201,28 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("保存了五个学生: " + students);
   }
 
+  public void testSaveAllWithFile() throws AVException {
+    List<Student> students = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      Student student = new Student();
+      student.setName(i + "");
+      AVFile avatar = new AVFile("avatar" + i, getAvatarBytes());
+      student.setAvatar(avatar);
+      students.add(student);
+    }
+    AVObject.saveAll(students);
+    log("批量保存了一批学生及其头像，students:" + students);
+  }
+
+  public void testBatchUpdate() throws AVException {
+    List<Student> students = findStudents();
+    for (Student student : students) {
+      student.setName("testBatchUpdate");
+    }
+    AVObject.saveAll(students);
+    log("批量更改了一批学生的名字，students:" + students);
+  }
+
   public List<Student> findStudents() throws AVException {
     AVQuery<Student> q = AVObject.getQuery(Student.class);
     q.limit(5);
@@ -204,7 +237,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
   }
 
   // create an object and query it.
-  public void testObjectRead() throws AVException {
+  public void testObjectSaveAndQuery() throws AVException {
     final String key = "array";
     final String objectTable = "ObjectDemoTableRead";
     final AVObject myObject = new AVObject(objectTable);
@@ -225,8 +258,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     setProgressBarIndeterminateVisibility(false);
   }
 
-  public void testObjectCreate() throws AVException {
-
+  public void testObjectCreateAndQuery() throws AVException {
     final String objectTable = "ObjectDemoTableCreate";
     final String key = "score";
     AVObject gameScore = new AVObject(objectTable);
@@ -243,7 +275,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
   }
 
   // update an object
-  public void testObjectUpdate() throws AVException {
+  public void testObjectUpdateAndQuery() throws AVException {
     final String key = "update";
     final String objectTable = "ObjectDemoTableUpdate";
     final AVObject myObject = new AVObject(objectTable);
@@ -264,7 +296,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     }
   }
 
-  public void testObjectDelete() throws AVException {
+  public void testObjectDeleteAndQuery() throws AVException {
     final String objectTable = "ObjectDemoTableDelete";
     final AVObject myObject = new AVObject(objectTable);
     myObject.save();

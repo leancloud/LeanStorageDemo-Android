@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class DemoGroupActivity extends ListActivity {
 
-  static final Map<String, String> demoMap = new HashMap<String, String>();
-
   /**
    * Called when the activity is first created.
    */
@@ -94,19 +92,17 @@ public class DemoGroupActivity extends ListActivity {
   }
 
   private List<String> myDemoArray() {
-    List<String> array = new ArrayList<String>(this.myDemoMap().keySet());
+    List<String> array = new ArrayList<String>();
+    array.add("ObjectDemoActivity");
+    array.add("UserDemoActivity");
+    array.add("FileDemoActivity");
+    array.add("SubclassDemoActivity");
+    array.add("QueryDemoActivity");
     return array;
   }
 
-  private Map<String, String> myDemoMap() {
-    if (demoMap.isEmpty()) {
-      demoMap.put("ObjectDemoActivity", "com.example.avoscloud_demo.demo.ObjectDemoActivity");
-      demoMap.put("UserDemoActivity", "com.example.avoscloud_demo.demo.UserDemoActivity");
-      demoMap.put("FileDemoActivity", "com.example.avoscloud_demo.demo.FileDemoActivity");
-      demoMap.put("SubclassDemoActivity", "com.example.avoscloud_demo.demo.SubclassDemoActivity");
-      demoMap.put("QueryDemoActivity", "com.example.avoscloud_demo.demo.QueryDemoActivity");
-    }
-    return demoMap;
+  private String getActivityClassName(String activity) {
+    return "com.example.avoscloud_demo.demo." + activity;
   }
 
   private void startActivityByName(final String className) {
@@ -121,7 +117,7 @@ public class DemoGroupActivity extends ListActivity {
   protected void onListItemClick(android.widget.ListView l, android.view.View v, int position, long id) {
     List<String> array = myDemoArray();
     String name = array.get(position);
-    String value = myDemoMap().get(name);
+    String value = getActivityClassName(name);
     startActivityByName(value);
   }
 }

@@ -83,6 +83,7 @@ public class DemoBaseActivity extends ListActivity {
 
   private String getFileSourceCode() {
     try {
+      // 如果是 .java，会出现同名 java，方法跳转等IDE功能有问题
       String name = this.getClass().getSimpleName() + ".file";
       InputStream inputStream = getAssets().open(name);
       String content = DemoUtils.readTextFile(inputStream);
@@ -110,9 +111,12 @@ public class DemoBaseActivity extends ListActivity {
     Matcher matcher = pattern.matcher(code);
     if (matcher.find()) {
       method = matcher.group(1);
-//      method = matcher.group(1);
     }
-    return method;
+    return formatToTwoSpacesIndent(method);
+  }
+
+  private String formatToTwoSpacesIndent(String method) {
+    return method.replaceAll("\n  ", "\n");
   }
 
   public void setupAdapter() {
