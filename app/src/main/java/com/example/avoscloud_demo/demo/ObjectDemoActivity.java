@@ -1,9 +1,8 @@
 package com.example.avoscloud_demo.demo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -15,8 +14,9 @@ import com.example.avoscloud_demo.Student;
 import junit.framework.Assert;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -77,6 +77,132 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     student.save();
     log("保存了文件，并把其作为一个字段保存到了对象。student: " + student);
   }
+
+  public void testObjectParse() throws Exception {
+    Student student = getFirstStudent();
+    String s = student.toString();
+    log("将对象序列化成字符串：" + s);
+
+    AVObject parseObject = AVObject.parseAVObject(s);
+    log("从字符串中解析对象：" + parseObject);
+  }
+
+  public void testObjectIntent() throws AVException {
+    Student student = getFirstStudent();
+    Intent intent = new Intent();
+    intent.putExtra("student", student);
+
+    Student intentStudent = intent.getParcelableExtra("student");
+    log("通过 intent 传递了对象 " + intentStudent);
+  }
+
+  public void testOfflineSave() {
+    log("请在网络关闭的时候运行本方法，然后开启网络，看是否保存上");
+    Student student = new Student();
+    student.setName("testOfflineSave");
+    student.saveEventually();
+    log("离线保存了对象：" + student);
+  }
+
+  public void testIncrement() throws AVException {
+    Student student = getFirstStudent();
+    log("生日前的年龄：%d", student.getAge());
+    student.increment(Student.AGE, 1);
+    student.save();
+    log("生日了，年龄：%d", student.getAge());
+  }
+
+  public void testAnyType() throws AVException {
+    Student student = getFirstStudent();
+    student.setAny(1);
+    student.save();
+    log("Any 字段保存为了数字 " + student.getAny());
+
+    student.setAny("hello");
+    student.save();
+    log("Any 字段保存为了字符串 " + student.getAny());
+
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("like", "swimming");
+    student.setAny(map);
+    student.save();
+    log("Any 字段保存为了Map " + student.getAny());
+  }
+
+  public void testRemoveKey() throws AVException {
+    Student student = getFirstStudent();
+    log("名字：" + student.getName());
+
+    student.remove(Student.NAME);
+    student.save();
+    log("将名字字段置为空后：", student.getName());
+  }
+
+  public void testArrayAddObject() throws AVException {
+    Student student = getFirstStudent();
+    log("添加前的爱好：" + student.getHobbies());
+    List<String> hobbies = new ArrayList<>();
+    hobbies.add("running");
+    hobbies.add("fly");
+    student.addAll(Student.HOBBIES, hobbies);
+    student.save();
+    log("添加了两个爱好, hobbies : " + student.getHobbies());
+  }
+
+  public void testArrayAddMutipleObjects() throws AVException {
+    Student student = getFirstStudent();
+    student.add(Student.HOBBIES, "swimming");
+    student.save();
+    log("添加了游泳爱好, hobbies : " + student.getHobbies());
+  }
+
+  public void testArrayRemoveObject() throws AVException {
+    Student student = getFirstStudent();
+    log("移除爱好前，hobbies = " + student.getHobbies());
+    List<String> removeHobbies = new ArrayList<>();
+    removeHobbies.add("swimming");
+    student.removeAll(Student.HOBBIES, removeHobbies);
+    student.save();
+    log("移除爱好后, hobbies = " + student.getHobbies());
+  }
+
+  public void testArrayAddUnique() throws AVException {
+    Student student = getFirstStudent();
+    student.addUnique(Student.HOBBIES, "swimming");
+    student.save();
+    log("添加了游泳的爱好之后, hobbies: " + student.getHobbies());
+
+    student.addUnique(Student.HOBBIES, "swimming");
+    student.save();
+    log("再次 addUnique 游泳爱好, hobbies:" + student.getHobbies());
+  }
+
+  public void testSaveAll() throws AVException {
+    List<Student> students = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      Student student = new Student();
+      student.setName(i + "");
+      student.setAge(i + 10);
+      students.add(student);
+    }
+    AVObject.saveAll(students);
+
+    log("保存了五个学生: " + students);
+  }
+
+  public List<Student> findStudents() throws AVException {
+    AVQuery<Student> q = AVObject.getQuery(Student.class);
+    q.limit(5);
+    return q.find();
+  }
+
+  public void testDeleteAll() throws AVException {
+    List<Student> students = findStudents();
+    AVObject.deleteAll(students);
+
+    log("删除掉了一批学生 " + students);
+  }
+
 
   // create an object and query it.
   public void testObjectRead() throws AVException {
