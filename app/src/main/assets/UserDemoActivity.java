@@ -1,26 +1,17 @@
 package com.example.avoscloud_demo.demo;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import ar.com.daidalos.afiledialog.FileChooserDialog;
 import com.avos.avoscloud.*;
 import com.example.avoscloud_demo.*;
 import com.example.avoscloud_demo.R;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.RandomAccessFile;
-
 public class UserDemoActivity extends DemoBaseActivity {
 
-  private void signUpImpl(final String message, final String username, final String password) {
+  private void signUpImpl(final String username, final String password) {
     AVUser.logOut();
     AVUser user = new AVUser();
     user.setUsername(username);
@@ -28,22 +19,22 @@ public class UserDemoActivity extends DemoBaseActivity {
     user.signUpInBackground(new SignUpCallback() {
       @Override
       public void done(AVException e) {
-        showMessage(message, e, false);
+        showMessage("", e, false);
       }
     });
   }
 
-  private void loginImpl(final String message, final String username, final String password) {
+  private void loginImpl(final String username, final String password) {
     AVUser.logOut();
     AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
       @Override
       public void done(AVUser avUser, AVException e) {
-        showMessage(message, e, false);
+        showMessage("", e, false);
       }
     });
   }
 
-  public void testUserSignUp(final String string) throws Exception {
+  public void testUserSignUp() throws Exception {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     LayoutInflater inflater = LayoutInflater.from(this);
     LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
@@ -58,7 +49,7 @@ public class UserDemoActivity extends DemoBaseActivity {
         // TODO Auto-generated method stub
         String username = userNameET.getText().toString();
         String password = passwordET.getText().toString();
-        signUpImpl(string, username, password);
+        signUpImpl(username, password);
       }
     }).setNegativeButton(R.string.login, new DialogInterface.OnClickListener() {
 
@@ -66,7 +57,7 @@ public class UserDemoActivity extends DemoBaseActivity {
       public void onClick(DialogInterface dialog, int which) {
         String username = userNameET.getText().toString();
         String password = passwordET.getText().toString();
-        loginImpl(string, username, password);
+        loginImpl(username, password);
       }
     });
     builder.setView(layout);

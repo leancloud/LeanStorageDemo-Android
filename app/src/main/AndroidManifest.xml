@@ -54,7 +54,8 @@
         <activity android:name="ar.com.daidalos.afiledialog.FileChooserActivity" />
         <activity
             android:name=".DemoRunActivity"
-            android:label="@string/title_activity_demo_run" >
+            android:label="@string/title_activity_demo_run"
+            android:launchMode="singleTask">
         </activity>
     </application>
 

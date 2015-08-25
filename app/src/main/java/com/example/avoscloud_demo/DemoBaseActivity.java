@@ -3,10 +3,13 @@ package com.example.avoscloud_demo;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -20,6 +23,8 @@ public class DemoBaseActivity extends ListActivity {
 
   static public final String CONTENT_TAG = "content";
   public static final String METHOD_TAG = "method";
+  public static final String TAG_DEMO = "Demo";
+  private TextView outputTextView;
 
   private List<String> codeSnippetList = new ArrayList<String>();
 
@@ -39,6 +44,9 @@ public class DemoBaseActivity extends ListActivity {
     setupButtonHandlers();
   }
 
+  public void setOutputTextView(TextView outputTextView) {
+    this.outputTextView = outputTextView;
+  }
 
   private void setupButtonHandlers() {
     Button button = (Button) findViewById(R.id.btn_show_source);
@@ -110,9 +118,17 @@ public class DemoBaseActivity extends ListActivity {
 
   public void showMessage(final String text, Exception e, boolean busy) {
     if (e == null) {
-      showMessage(text + " finished.");
+      if (outputTextView == null) {
+        showMessage(text + " finished.");
+      } else {
+        log(text + " finished");
+      }
     } else {
-      showMessage(e.toString());
+      if (outputTextView == null) {
+        showMessage(e.toString());
+      } else {
+        log(e.toString());
+      }
     }
     if (!busy) {
       setProgressBarIndeterminateVisibility(false);
@@ -146,10 +162,12 @@ public class DemoBaseActivity extends ListActivity {
   }
 
 
-  public boolean isBlankString(final String string) {
-    if (string == null || string.trim().isEmpty()) {
-      return true;
+  protected void log(String format, @Nullable Object... objects) {
+    String msg = String.format(format, objects);
+    Log.d(TAG_DEMO, msg);
+    if (outputTextView != null) {
+      outputTextView.setText(outputTextView.getText() + "\n-------- RUN --------\n" + msg);
     }
-    return false;
   }
+
 }

@@ -80,4 +80,11 @@ public class DemoUtils {
       throw exception;
     }
   }
+
+  public static boolean isBlankString(final String string) {
+    if (string == null || string.trim().isEmpty()) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -34,7 +34,7 @@ public class FileDemoActivity extends DemoBaseActivity {
     return data;
   }
 
-  private void uploadFileImpl(File file, final String string) {
+  private void uploadFileImpl(File file) {
     byte[] data = readFile(file);
     if (data == null) {
       Toast.makeText(this, "File is too big to upload.", Toast.LENGTH_LONG).show();
@@ -44,7 +44,7 @@ public class FileDemoActivity extends DemoBaseActivity {
     avFile.saveInBackground(new SaveCallback() {
       @Override
       public void done(AVException e) {
-        FileDemoActivity.this.showMessage(string, e, false);
+        FileDemoActivity.this.showMessage("", e, false);
         if (e == null) {
           fileUrl = avFile.getUrl();
           objectId = avFile.getObjectId();
@@ -59,13 +59,13 @@ public class FileDemoActivity extends DemoBaseActivity {
     });
   }
 
-  public void testFileUpload(final String string) throws AVException {
+  public void testFileUpload() throws AVException {
     FileChooserDialog dialog = new FileChooserDialog(this);
     dialog.show();
     dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
       public void onFileSelected(Dialog source, File file) {
         source.hide();
-        FileDemoActivity.this.uploadFileImpl(file, string);
+        FileDemoActivity.this.uploadFileImpl(file);
       }
 
       public void onFileSelected(Dialog source, File folder, String name) {
@@ -74,8 +74,8 @@ public class FileDemoActivity extends DemoBaseActivity {
   }
 
   // create an object and query it.
-  public void testFileDownload(final String string) throws AVException {
-    if (isBlankString(fileUrl)) {
+  public void testFileDownload() throws AVException {
+    if (DemoUtils.isBlankString(fileUrl)) {
       showMessage("Please upload file at first.", null, false);
       return;
     }
@@ -83,14 +83,14 @@ public class FileDemoActivity extends DemoBaseActivity {
     avFile.getDataInBackground(new GetDataCallback() {
       @Override
       public void done(byte[] bytes, AVException e) {
-        showMessage(string, e, false);
+        showMessage("", e, false);
       }
     });
   }
 
   // update an object
-  public void testFileDelete(final String string) throws Exception {
-    if (isBlankString(objectId)) {
+  public void testFileDelete() throws Exception {
+    if (DemoUtils.isBlankString(objectId)) {
       showMessage("Please upload file at first.", null, false);
       return;
     }
@@ -100,7 +100,7 @@ public class FileDemoActivity extends DemoBaseActivity {
         avFile.deleteInBackground(new DeleteCallback() {
           @Override
           public void done(AVException e) {
-            showMessage(string, e, false);
+            showMessage(null, e, false);
           }
         });
       }

@@ -25,17 +25,15 @@ public class SubclassDemoActivity extends DemoBaseActivity {
   }
 
   private class SubuserTask extends AsyncTask<String, Void, Void> {
-    volatile private String message = null;
     volatile private Exception exception = null;
 
     @Override
     protected Void doInBackground(String... params) {
-      message = params[0];
       try {
-        if (params[1] == SIGNUP_TAG) {
-          subuserSignUpImpl(params[2], params[3]);
-        } else if (params[1] == LOGIN_TAG) {
-          subuserLoginImpl(params[2], params[3]);
+        if (params[0] == SIGNUP_TAG) {
+          subuserSignUpImpl(params[1], params[2]);
+        } else if (params[0] == LOGIN_TAG) {
+          subuserLoginImpl(params[1], params[2]);
         }
       } catch (Exception e) {
         exception = e;
@@ -46,7 +44,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
 
     @Override
     protected void onPostExecute(Void result) {
-      SubclassDemoActivity.this.showMessage(message, exception, false);
+      SubclassDemoActivity.this.showMessage("", exception, false);
     }
 
     @Override
@@ -60,12 +58,10 @@ public class SubclassDemoActivity extends DemoBaseActivity {
   }
 
   private class SubObjectTask extends AsyncTask<String, Void, Void> {
-    volatile private String message = null;
     volatile private Exception exception = null;
 
     @Override
     protected Void doInBackground(String... params) {
-      message = params[0];
       try {
         SubObject armor = new SubObject();
         String displayName = "avos cloud subclass object.";
@@ -88,7 +84,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
 
     @Override
     protected void onPostExecute(Void result) {
-      SubclassDemoActivity.this.showMessage(message, exception, false);
+      SubclassDemoActivity.this.showMessage("", exception, false);
     }
 
     @Override
@@ -135,22 +131,22 @@ public class SubclassDemoActivity extends DemoBaseActivity {
     Assert.assertTrue(currentUser instanceof SubUser);
   }
 
-  private void runLoginTask(final String string, final String username, final String password) {
+  private void runLoginTask(final String username, final String password) {
     SubuserTask task = new SubuserTask();
-    task.execute(string, LOGIN_TAG, username, password);
+    task.execute(LOGIN_TAG, username, password);
   }
 
-  private void runSignUpTask(final String string, final String username, final String password) {
+  private void runSignUpTask(final String username, final String password) {
     SubuserTask task = new SubuserTask();
-    task.execute(string, SIGNUP_TAG, username, password);
+    task.execute(SIGNUP_TAG, username, password);
   }
 
-  private void runSubObjectTask(final String string) {
+  private void runSubObjectTask() {
     SubObjectTask task = new SubObjectTask();
-    task.execute(string);
+    task.execute();
   }
 
-  public void testSubUserSignup(final String string) throws AVException {
+  public void testSubUserSignup() throws AVException {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     LayoutInflater inflater = LayoutInflater.from(this);
     LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
@@ -165,7 +161,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
         // TODO Auto-generated method stub
         String username = userNameET.getText().toString();
         String password = passwordET.getText().toString();
-        runSignUpTask(string, username, password);
+        runSignUpTask(username, password);
       }
     }).setNegativeButton(R.string.login, new DialogInterface.OnClickListener() {
 
@@ -173,7 +169,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
       public void onClick(DialogInterface dialog, int which) {
         String username = userNameET.getText().toString();
         String password = passwordET.getText().toString();
-        runLoginTask(string, username, password);
+        runLoginTask(username, password);
       }
     });
     builder.setView(layout);
@@ -181,7 +177,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
     ad.show();
   }
 
-  public void testSubObject(final String string) throws Exception {
-    runSubObjectTask(string);
+  public void testSubObject() throws Exception {
+    runSubObjectTask();
   }
 }

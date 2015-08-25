@@ -12,9 +12,8 @@ import java.util.*;
 
 public class ObjectDemoActivity extends DemoBaseActivity {
 
-
   // create an object and query it.
-  public void testObjectRead(final String string) throws AVException {
+  public void testObjectRead() throws AVException {
     final String key = "array";
     final String objectTable = "ObjectDemoTableRead";
     final AVObject myObject = new AVObject(objectTable);
@@ -31,9 +30,9 @@ public class ObjectDemoActivity extends DemoBaseActivity {
             List<Number> array = result.getList(key);
             Assert.assertTrue(array.size() == 5);
             if (array.size() != 5) {
-              showMessage(string, new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+              showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
             } else {
-              showMessage(string, null, false);
+              showMessage("", null, false);
             }
             setProgressBarIndeterminateVisibility(false);
           }
@@ -42,7 +41,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     });
   }
 
-  public void testObjectCreate(final String string) throws AVException {
+  public void testObjectCreate() throws AVException {
 
     final String objectTable = "ObjectDemoTableCreate";
     final String key = "score";
@@ -60,14 +59,14 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     gameScore.saveInBackground(new SaveCallback() {
       @Override
       public void done(AVException e) {
-        showMessage(string, e, false);
+        showMessage("", e, false);
 
       }
     });
   }
 
   // update an object
-  public void testObjectUpdate(final String string) {
+  public void testObjectUpdate() {
     final String key = "update";
     final String objectTable = "ObjectDemoTableUpdate";
     final AVObject myObject = new AVObject(objectTable);
@@ -88,9 +87,9 @@ public class ObjectDemoActivity extends DemoBaseActivity {
                 String stringValue = (String) result.get(key);
                 Assert.assertEquals(stringValue, value);
                 if (!value.equals(stringValue)) {
-                  showMessage(string, new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+                  showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
                 } else {
-                  showMessage(string, null, false);
+                  showMessage("", null, false);
                 }
               }
             });
@@ -100,7 +99,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     });
   }
 
-  public void testObjectDelete(final String string) {
+  public void testObjectDelete() {
     final String objectTable = "ObjectDemoTableDelete";
     final AVObject myObject = new AVObject(objectTable);
     myObject.saveInBackground(new SaveCallback() {
@@ -115,9 +114,9 @@ public class ObjectDemoActivity extends DemoBaseActivity {
               public void done(AVObject result, AVException e) {
                 Assert.assertTrue(result == null);
                 if (result != null) {
-                  showMessage(string, new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
+                  showMessage("", new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
                 } else {
-                  showMessage(string, null, false);
+                  showMessage("", null, false);
                 }
               }
             });

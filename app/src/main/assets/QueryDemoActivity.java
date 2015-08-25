@@ -14,13 +14,11 @@ public class QueryDemoActivity extends DemoBaseActivity {
   static private final String USER_QUERY = "user_query";
 
   private class QueryTask extends AsyncTask<String, Void, Void> {
-    volatile private String message = null;
     volatile private Exception exception = null;
 
     @Override
     protected Void doInBackground(String... params) {
-      message = params[0];
-      String type = params[1];
+      String type = params[0];
       try {
         if (BASIC_QUERY.equals(type)) {
           QueryDemoActivity.this.objectQueryImpl();
@@ -36,7 +34,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
     @Override
     protected void onPostExecute(Void result) {
-      QueryDemoActivity.this.showMessage(message, exception, false);
+      QueryDemoActivity.this.showMessage("", exception, false);
     }
 
     @Override
@@ -125,13 +123,13 @@ public class QueryDemoActivity extends DemoBaseActivity {
   }
 
   // create an object and query it.
-  public void testObjectQuery(final String string) throws AVException {
+  public void testObjectQuery() throws AVException {
     QueryTask task = new QueryTask();
-    task.execute(BASIC_QUERY, string);
+    task.execute(BASIC_QUERY);
   }
 
-  public void testUserQuery(final String string) throws AVException {
+  public void testUserQuery() throws AVException {
     QueryTask task = new QueryTask();
-    task.execute(USER_QUERY, string);
+    task.execute(USER_QUERY);
   }
 }

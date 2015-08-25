@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.avoscloud_demo.DemoRunActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_run"
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/action_run" />
