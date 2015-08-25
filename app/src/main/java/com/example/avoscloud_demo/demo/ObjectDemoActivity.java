@@ -203,7 +203,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("删除掉了一批学生 " + students);
   }
 
-
   // create an object and query it.
   public void testObjectRead() throws AVException {
     final String key = "array";

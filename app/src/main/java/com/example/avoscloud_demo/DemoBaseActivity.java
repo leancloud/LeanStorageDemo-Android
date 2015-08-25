@@ -20,7 +20,11 @@ import android.widget.Toast;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,12 +37,17 @@ public class DemoBaseActivity extends ListActivity {
   protected DemoRunActivity demoRunActivity;
 
   private List<String> codeSnippetList = new ArrayList<String>();
+  private List<String> displayNames = new ArrayList<>();
 
-  public List<String> myTestList() {
-    if (codeSnippetList.isEmpty()) {
-      codeSnippetList.addAll(methodsWithPrefix("test"));
+  public void findAllMethods() {
+    List<String> methods = methodsWithPrefix("test");
+    sortMethods(methods);
+    codeSnippetList.clear();
+    codeSnippetList.addAll(methods);
+    displayNames.clear();
+    for (String method : methods) {
+      displayNames.add(method.substring(4));
     }
-    return codeSnippetList;
   }
 
   @Override
@@ -107,10 +116,10 @@ public class DemoBaseActivity extends ListActivity {
   }
 
   public void setupAdapter() {
-    List<String> array = myTestList();
+    findAllMethods();
     ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
         android.R.layout.simple_list_item_1,
-        array);
+        displayNames);
     setListAdapter(adapter);
   }
 
@@ -147,6 +156,21 @@ public class DemoBaseActivity extends ListActivity {
     }
   }
 
+  private void sortMethods(final List<String> methods) {
+    final Map<String, Integer> positions = new HashMap<>();
+    String sourceCode = getFileSourceCode();
+    for (String method : methods) {
+      int pos = sourceCode.indexOf(method);
+      positions.put(method, pos);
+    }
+    Collections.sort(methods, new Comparator<String>() {
+      @Override
+      public int compare(String lhs, String rhs) {
+        return positions.get(lhs) - positions.get(rhs);
+      }
+    });
+  }
+
   public List<String> methodsWithPrefix(final String prefix) {
     List<String> methods = new ArrayList<String>();
     try {
@@ -166,8 +190,7 @@ public class DemoBaseActivity extends ListActivity {
   protected void onListItemClick(android.widget.ListView l, android.view.View v, int position, long id) {
     Intent intent = new Intent(this, DemoRunActivity.class);
     DemoRunActivity.demoActivity = this;
-    List<String> array = myTestList();
-    String name = array.get(position);
+    String name = codeSnippetList.get(position);
     intent.putExtra(CONTENT_TAG, getMethodSourceCode(name));
     intent.putExtra(METHOD_TAG, name);
     startActivity(intent);
