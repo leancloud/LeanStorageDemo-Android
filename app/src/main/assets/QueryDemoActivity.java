@@ -1,87 +1,19 @@
 package com.example.avoscloud_demo.demo;
 
-import android.os.AsyncTask;
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.example.avoscloud_demo.DemoBaseActivity;
+import com.example.avoscloud_demo.DemoUtils;
 import junit.framework.Assert;
 
 import java.util.List;
-import java.util.Random;
 
 public class QueryDemoActivity extends DemoBaseActivity {
 
-  static private final String BASIC_QUERY = "basic_query";
-  static private final String USER_QUERY = "user_query";
-
-  private class QueryTask extends AsyncTask<String, Void, Void> {
-    volatile private Exception exception = null;
-
-    @Override
-    protected Void doInBackground(String... params) {
-      String type = params[0];
-      try {
-        if (BASIC_QUERY.equals(type)) {
-          QueryDemoActivity.this.objectQueryImpl();
-        } else if (USER_QUERY.equals(type)) {
-          QueryDemoActivity.this.userQueryImpl();
-        }
-      } catch (Exception e) {
-        exception = e;
-        exception.printStackTrace();
-      }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-      QueryDemoActivity.this.showMessage("", exception, false);
-    }
-
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-    }
-  }
-
-  public static String getRandomString(int length) {
-    String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    StringBuilder randomString = new StringBuilder(length);
-
-    for (int i = 0; i < length; i++) {
-      randomString.append(letters.charAt(new Random().nextInt(letters.length())));
-    }
-
-    return randomString.toString();
-  }
-
-  private void userQueryImpl() throws Exception {
-    String lastString = null;
-    // signup some test user
-    for (int i = 0; i < 10; ++i) {
-      AVUser user = new AVUser();
-      user.setUsername(getRandomString(10));
-      user.setPassword(getRandomString(10));
-      user.signUp();
-      Assert.assertFalse(user.getObjectId().isEmpty());
-      lastString = user.getUsername();
-    }
-
-    AVQuery currentQuery = AVUser.getQuery();
-    AVQuery innerQuery = AVUser.getQuery();
-    innerQuery.whereContains("username", lastString);
-    currentQuery.whereMatchesKeyInQuery("username", "username", innerQuery);
-    List<AVUser> users = currentQuery.find();
-    Assert.assertTrue(users.size() == 1);
-    for (AVUser resultUser : users) {
-      Assert.assertTrue(resultUser.getUsername().equals(lastString));
-    }
-  }
-
-  private void objectQueryImpl() throws Exception {
+  // create an object and query it.
+  public void testObjectQuery() throws AVException {
     AVObject person1 = AVObject.create("Person");
     person1.put("gender", "Female");
     person1.put("name", "Cake");
@@ -122,14 +54,26 @@ public class QueryDemoActivity extends DemoBaseActivity {
     }
   }
 
-  // create an object and query it.
-  public void testObjectQuery() throws AVException {
-    QueryTask task = new QueryTask();
-    task.execute(BASIC_QUERY);
-  }
-
   public void testUserQuery() throws AVException {
-    QueryTask task = new QueryTask();
-    task.execute(USER_QUERY);
+    String lastString = null;
+    // signup some test user
+    for (int i = 0; i < 10; ++i) {
+      AVUser user = new AVUser();
+      user.setUsername(DemoUtils.getRandomString(10));
+      user.setPassword(DemoUtils.getRandomString(10));
+      user.signUp();
+      Assert.assertFalse(user.getObjectId().isEmpty());
+      lastString = user.getUsername();
+    }
+
+    AVQuery currentQuery = AVUser.getQuery();
+    AVQuery innerQuery = AVUser.getQuery();
+    innerQuery.whereContains("username", lastString);
+    currentQuery.whereMatchesKeyInQuery("username", "username", innerQuery);
+    List<AVUser> users = currentQuery.find();
+    Assert.assertTrue(users.size() == 1);
+    for (AVUser resultUser : users) {
+      Assert.assertTrue(resultUser.getUsername().equals(lastString));
+    }
   }
 }

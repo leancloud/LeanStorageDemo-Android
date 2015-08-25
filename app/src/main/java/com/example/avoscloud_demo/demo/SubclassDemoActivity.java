@@ -15,8 +15,6 @@ import junit.framework.Assert;
 import static junit.framework.Assert.assertFalse;
 
 public class SubclassDemoActivity extends DemoBaseActivity {
-  static final private String SIGNUP_TAG = "signup";
-  static final private String LOGIN_TAG = "login";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -24,160 +22,77 @@ public class SubclassDemoActivity extends DemoBaseActivity {
     SubObject.registerSubclass(SubObject.class);
   }
 
-  private class SubuserTask extends AsyncTask<String, Void, Void> {
-    volatile private Exception exception = null;
+  public void testSubUserSignup() throws AVException {
+    showInputDialog("Sign up", new InputDialogListener() {
+      @Override
+      public void onAction(final String username, final String password) {
+        new BackgroundTask() {
+          @Override
+          protected void doInBack() throws Exception {
+            SubObject armor = new SubObject();
+            armor.setDisplayName("avos cloud demo object.");
+            armor.setBroken(false);
+            armor.save();
+            Assert.assertFalse(armor.getObjectId().isEmpty());
 
-    @Override
-    protected Void doInBackground(String... params) {
-      try {
-        if (params[0] == SIGNUP_TAG) {
-          subuserSignUpImpl(params[1], params[2]);
-        } else if (params[0] == LOGIN_TAG) {
-          subuserLoginImpl(params[1], params[2]);
-        }
-      } catch (Exception e) {
-        exception = e;
-        exception.printStackTrace();
+            SubUser subUser = new SubUser();
+            String nickName = "testSignupSubUser";
+            subUser.setUsername(username);
+            subUser.setPassword(password);
+            subUser.setNickName(nickName);
+            subUser.setArmor(armor);
+            subUser.signUp();
+            Assert.assertFalse(subUser.getObjectId().isEmpty());
+            Assert.assertFalse(subUser.getSessionToken().isEmpty());
+
+            SubUser cloudUser = AVUser.logIn(username, password, SubUser.class);
+            Assert.assertTrue(cloudUser.getSessionToken() != null);
+            Assert.assertEquals(cloudUser.getObjectId(), subUser.getObjectId());
+            Assert.assertEquals(cloudUser.getSessionToken(), subUser.getSessionToken());
+            Assert.assertEquals(username, cloudUser.getUsername());
+            Assert.assertEquals(nickName, cloudUser.getNickName());
+            Assert.assertNotNull(cloudUser.getArmor());
+            AVUser currentUser = AVUser.getCurrentUser();
+            Assert.assertTrue(currentUser instanceof SubUser);
+          }
+
+          @Override
+          protected void onPost(Exception e) {
+
+          }
+        }.execute();
       }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-      SubclassDemoActivity.this.showMessage("", exception, false);
-    }
-
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-    }
+    });
   }
 
-  private class SubObjectTask extends AsyncTask<String, Void, Void> {
-    volatile private Exception exception = null;
-
-    @Override
-    protected Void doInBackground(String... params) {
-      try {
-        SubObject armor = new SubObject();
-        String displayName = "avos cloud subclass object.";
-        armor.setDisplayName(displayName);
-        armor.setBroken(false);
-        armor.save();
-        Assert.assertFalse(armor.getObjectId().isEmpty());
-
-        AVQuery<SubObject> query = AVObject.getQuery(SubObject.class);
-        SubObject result = query.get(armor.getObjectId());
-        Assert.assertTrue(result instanceof SubObject);
-        String value = result.getDisplayName();
-        Assert.assertEquals(value, displayName);
-      } catch (Exception e) {
-        exception = e;
-        e.printStackTrace();
+  public void testLogin() {
+    showInputDialog("Login", new InputDialogListener() {
+      @Override
+      public void onAction(String username, String password) {
+        SubUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
+          @Override
+          public void done(AVUser avUser, AVException e) {
+            AVUser currentUser = AVUser.getCurrentUser();
+            Assert.assertTrue(currentUser instanceof SubUser);
+          }
+        });
       }
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-      SubclassDemoActivity.this.showMessage("", exception, false);
-    }
-
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-    }
+    });
   }
 
-  private void subuserSignUpImpl(final String username, final String password) throws Exception {
+
+  public void testSubObject() throws Exception {
     SubObject armor = new SubObject();
-    armor.setDisplayName("avos cloud demo object.");
+    String displayName = "avos cloud subclass object.";
+    armor.setDisplayName(displayName);
     armor.setBroken(false);
     armor.save();
     Assert.assertFalse(armor.getObjectId().isEmpty());
 
-    SubUser subUser = new SubUser();
-    String nickName = "testSignupSubUser";
-    subUser.setUsername(username);
-    subUser.setPassword(password);
-    subUser.setNickName(nickName);
-    subUser.setArmor(armor);
-    subUser.signUp();
-    Assert.assertFalse(subUser.getObjectId().isEmpty());
-    Assert.assertFalse(subUser.getSessionToken().isEmpty());
-
-    SubUser cloudUser = AVUser.logIn(username, password, SubUser.class);
-    Assert.assertTrue(cloudUser.getSessionToken() != null);
-    Assert.assertEquals(cloudUser.getObjectId(), subUser.getObjectId());
-    Assert.assertEquals(cloudUser.getSessionToken(), subUser.getSessionToken());
-    Assert.assertEquals(username, cloudUser.getUsername());
-    Assert.assertEquals(nickName, cloudUser.getNickName());
-    Assert.assertNotNull(cloudUser.getArmor());
-    AVUser currentUser = AVUser.getCurrentUser();
-    Assert.assertTrue(currentUser instanceof SubUser);
-  }
-
-  private void subuserLoginImpl(final String username, final String password) throws Exception {
-    SubUser.logIn(username, password);
-    AVUser currentUser = AVUser.getCurrentUser();
-    Assert.assertTrue(currentUser instanceof SubUser);
-  }
-
-  private void runLoginTask(final String username, final String password) {
-    SubuserTask task = new SubuserTask();
-    task.execute(LOGIN_TAG, username, password);
-  }
-
-  private void runSignUpTask(final String username, final String password) {
-    SubuserTask task = new SubuserTask();
-    task.execute(SIGNUP_TAG, username, password);
-  }
-
-  private void runSubObjectTask() {
-    SubObjectTask task = new SubObjectTask();
-    task.execute();
-  }
-
-  public void testSubUserSignup() throws AVException {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    LayoutInflater inflater = LayoutInflater.from(this);
-    LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
-
-    final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
-    final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);
-
-    builder.setTitle("sign up").setPositiveButton(R.string.signup, new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        // TODO Auto-generated method stub
-        String username = userNameET.getText().toString();
-        String password = passwordET.getText().toString();
-        runSignUpTask(username, password);
-      }
-    }).setNegativeButton(R.string.login, new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        String username = userNameET.getText().toString();
-        String password = passwordET.getText().toString();
-        runLoginTask(username, password);
-      }
-    });
-    builder.setView(layout);
-    AlertDialog ad = builder.create();
-    ad.show();
-  }
-
-  public void testSubObject() throws Exception {
-    runSubObjectTask();
+    AVQuery<SubObject> query = AVObject.getQuery(SubObject.class);
+    SubObject result = query.get(armor.getObjectId());
+    Assert.assertTrue(result instanceof SubObject);
+    String value = result.getDisplayName();
+    Assert.assertEquals(value, displayName);
   }
 }

@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  * Created by lzw on 15/8/24.
@@ -86,5 +87,16 @@ public class DemoUtils {
       return true;
     }
     return false;
+  }
+
+  public static String getRandomString(int length) {
+    String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    StringBuilder randomString = new StringBuilder(length);
+
+    for (int i = 0; i < length; i++) {
+      randomString.append(letters.charAt(new Random().nextInt(letters.length())));
+    }
+
+    return randomString.toString();
   }
 }

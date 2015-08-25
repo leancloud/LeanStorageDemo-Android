@@ -17,7 +17,7 @@ android {
         }
     }
 
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -25,6 +25,28 @@ android {
     lintOptions {
         abortOnError false
     }
+
+
+    sourceSets {
+        main {
+            java {
+                exclude 'src/main/assets'
+            }
+        }
+    }
+
+//
+//    sourceSets {
+//        main {
+//            manifest.srcFile 'src/main/AndroidManifest.xml'
+//            java.srcDirs = ['src/main/java']
+//            resources.srcDirs = ['src/main/res']
+//            res.srcDirs = ['src/main/res']
+//            assets.srcDirs = ['src/main/assets']
+//        }
+//
+//        androidTest.setRoot('tests')
+//    }
 }
 
 dependencies {
@@ -43,9 +65,25 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-search:v3.7.2@aar'
 }
 
-task copySource (type: Copy){
+task copySource(type: Copy) {
+//    File demoDir = file 'src/main/java/com/example/avoscloud_demo/demo';
+//    FileCollection collection = files { demoDir.listFiles() }
+//    collection.collect {
+//        def name = it.name.substring(0, it.name.indexOf('.'));
+//        println name
+//        from it
+//        into 'src/main/assets/'
+//
+//    }
+
     from 'src/main/java/com/example/avoscloud_demo/demo'
     into 'src/main/assets'
+//    rename { String fileName ->
+//        println fileName
+//        fileName.replace('.java', '')
+//    }
+//    rename 'src/main/assets/(.*).java','src/main/assets/$1'
+
 }
 
 preBuild.dependsOn copySource

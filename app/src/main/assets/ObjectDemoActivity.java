@@ -1,14 +1,16 @@
 package com.example.avoscloud_demo.demo;
 
-import android.os.Bundle;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.DeleteCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import junit.framework.Assert;
 
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 public class ObjectDemoActivity extends DemoBaseActivity {
 
@@ -20,25 +22,18 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     for (int i = 0; i < 5; ++i) {
       myObject.add(key, i);
     }
-    myObject.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(AVException avException) {
-        AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-        query.getInBackground(myObject.getObjectId(), new GetCallback<AVObject>() {
-          @Override
-          public void done(AVObject result, AVException e) {
-            List<Number> array = result.getList(key);
-            Assert.assertTrue(array.size() == 5);
-            if (array.size() != 5) {
-              showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
-            } else {
-              showMessage("", null, false);
-            }
-            setProgressBarIndeterminateVisibility(false);
-          }
-        });
-      }
-    });
+    myObject.save();
+
+    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
+    AVObject result = query.get(myObject.getObjectId());
+    List<Number> array = result.getList(key);
+    Assert.assertTrue(array.size() == 5);
+    if (array.size() != 5) {
+      showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+    } else {
+      showMessage("", null, false);
+    }
+    setProgressBarIndeterminateVisibility(false);
   }
 
   public void testObjectCreate() throws AVException {
@@ -55,76 +50,43 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     gameScore.put("playerName", targetString);
     String stringValue = gameScore.getString("playerName");
     Assert.assertTrue(stringValue == targetString);
-
-    gameScore.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(AVException e) {
-        showMessage("", e, false);
-
-      }
-    });
+    gameScore.save();
   }
 
   // update an object
-  public void testObjectUpdate() {
+  public void testObjectUpdate() throws AVException {
     final String key = "update";
     final String objectTable = "ObjectDemoTableUpdate";
     final AVObject myObject = new AVObject(objectTable);
     final String value = "anotherValue";
     myObject.put(key, "myValue");
+    myObject.save();
 
-    myObject.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(AVException avException) {
-        myObject.put(key, value);
-        myObject.saveInBackground(new SaveCallback() {
-          @Override
-          public void done(AVException e) {
-            AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-            query.getInBackground(myObject.getObjectId(), new GetCallback<AVObject>() {
-              @Override
-              public void done(AVObject result, AVException e) {
-                String stringValue = (String) result.get(key);
-                Assert.assertEquals(stringValue, value);
-                if (!value.equals(stringValue)) {
-                  showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
-                } else {
-                  showMessage("", null, false);
-                }
-              }
-            });
-          }
-        });
-      }
-    });
+    myObject.put(key, value);
+    myObject.save();
+    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
+    AVObject result = query.get(myObject.getObjectId());
+    String stringValue = (String) result.get(key);
+    Assert.assertEquals(stringValue, value);
+    if (!value.equals(stringValue)) {
+      showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+    } else {
+      showMessage("", null, false);
+    }
   }
 
-  public void testObjectDelete() {
+  public void testObjectDelete() throws AVException {
     final String objectTable = "ObjectDemoTableDelete";
     final AVObject myObject = new AVObject(objectTable);
-    myObject.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(AVException avException) {
-        myObject.deleteInBackground(new DeleteCallback() {
-          @Override
-          public void done(AVException e) {
-            AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-            query.getInBackground(myObject.getObjectId(), new GetCallback<AVObject>() {
-              @Override
-              public void done(AVObject result, AVException e) {
-                Assert.assertTrue(result == null);
-                if (result != null) {
-                  showMessage("", new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
-                } else {
-                  showMessage("", null, false);
-                }
-              }
-            });
-          }
-        });
-      }
-
-      ;
-    });
+    myObject.save();
+    myObject.delete();
+    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
+    AVObject result = query.get(myObject.getObjectId());
+    Assert.assertTrue(result == null);
+    if (result != null) {
+      showMessage("", new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
+    } else {
+      showMessage("", null, false);
+    }
   }
 }

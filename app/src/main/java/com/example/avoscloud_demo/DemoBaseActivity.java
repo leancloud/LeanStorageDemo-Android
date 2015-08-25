@@ -1,14 +1,19 @@
 package com.example.avoscloud_demo;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,7 @@ public class DemoBaseActivity extends ListActivity {
   public static final String METHOD_TAG = "method";
   public static final String TAG_DEMO = "Demo";
   private TextView outputTextView;
+  protected DemoRunActivity demoRunActivity;
 
   private List<String> codeSnippetList = new ArrayList<String>();
 
@@ -46,6 +52,10 @@ public class DemoBaseActivity extends ListActivity {
 
   public void setOutputTextView(TextView outputTextView) {
     this.outputTextView = outputTextView;
+  }
+
+  public void setDemoRunActivity(DemoRunActivity demoRunActivity) {
+    this.demoRunActivity = demoRunActivity;
   }
 
   private void setupButtonHandlers() {
@@ -163,11 +173,66 @@ public class DemoBaseActivity extends ListActivity {
 
 
   protected void log(String format, @Nullable Object... objects) {
-    String msg = String.format(format, objects);
+    final String msg = String.format(format, objects);
     Log.d(TAG_DEMO, msg);
     if (outputTextView != null) {
-      outputTextView.setText(outputTextView.getText() + "\n-------- RUN --------\n" + msg);
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          outputTextView.setText(outputTextView.getText() + "\n-------- RUN --------\n" + msg);
+        }
+      });
     }
   }
 
+  public void run(final String methodName) {
+//    setProgressBarIndeterminateVisibility(true);
+    new BackgroundTask() {
+      @Override
+      protected void doInBack() throws Exception {
+        Method method = DemoUtils.getMethodSafely(DemoBaseActivity.this.getClass(), methodName);
+        DemoUtils.invokeMethod(DemoBaseActivity.this, method);
+      }
+
+      @Override
+      protected void onPost(Exception e) {
+        if (e != null) {
+          log("Error : %s", e.toString());
+        } else {
+          log("%s Finished.", methodName);
+        }
+      }
+    }.execute();
+  }
+
+  protected void showInputDialog(final String title, final InputDialogListener listener) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(demoRunActivity);
+        LayoutInflater inflater = LayoutInflater.from(demoRunActivity);
+        final LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
+
+        final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
+        final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);
+        builder.setView(layout);
+        builder.setTitle(title).setPositiveButton(title, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            String username = userNameET.toString();
+            String password = passwordET.toString();
+            if (listener != null && username.length() > 0 && password.length() > 0) {
+              listener.onAction(username, password);
+            }
+          }
+        });
+        AlertDialog ad = builder.create();
+        ad.show();
+      }
+    });
+  }
+
+  public interface InputDialogListener {
+    void onAction(final String username, final String password);
+  }
 }

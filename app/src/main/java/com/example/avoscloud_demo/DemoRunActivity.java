@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
-
 public class DemoRunActivity extends Activity {
   public static DemoBaseActivity demoActivity;
   private String methodName;
@@ -24,6 +22,7 @@ public class DemoRunActivity extends Activity {
     outputTextView = (TextView) findViewById(R.id.output_view);
     outputTextView.setMovementMethod(new ScrollingMovementMethod());
     demoActivity.setOutputTextView(outputTextView);
+    demoActivity.setDemoRunActivity(this);
 
     String code = getIntent().getStringExtra(DemoBaseActivity.CONTENT_TAG);
     DemoUtils.loadCodeAtWebView(this, code, webView);
@@ -37,16 +36,6 @@ public class DemoRunActivity extends Activity {
   protected void onDestroy() {
     super.onDestroy();
     demoActivity.setOutputTextView(null);
-  }
-
-  public void run() {
-    Method method = DemoUtils.getMethodSafely(demoActivity.getClass(), methodName);
-//    setProgressBarIndeterminateVisibility(true);
-    try {
-      DemoUtils.invokeMethod(demoActivity, method);
-    } catch (Exception exception) {
-      /*showMessage(null, exception, false);*/
-    }
   }
 
   @Override
@@ -65,7 +54,7 @@ public class DemoRunActivity extends Activity {
 
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_run) {
-      run();
+      demoActivity.run(methodName);
       return true;
     }
 

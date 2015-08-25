@@ -34,38 +34,34 @@ public class FileDemoActivity extends DemoBaseActivity {
     return data;
   }
 
-  private void uploadFileImpl(File file) {
-    byte[] data = readFile(file);
-    if (data == null) {
-      Toast.makeText(this, "File is too big to upload.", Toast.LENGTH_LONG).show();
-      return;
-    }
-    final AVFile avFile = new AVFile(file.getName(), data);
-    avFile.saveInBackground(new SaveCallback() {
-      @Override
-      public void done(AVException e) {
-        FileDemoActivity.this.showMessage("", e, false);
-        if (e == null) {
-          fileUrl = avFile.getUrl();
-          objectId = avFile.getObjectId();
-        }
-        setProgressBarIndeterminateVisibility(false);
-      }
-    }, new ProgressCallback() {
-      @Override
-      public void done(Integer percentDone) {
-        LogUtil.log.d("uploading: " + percentDone);
-      }
-    });
-  }
-
   public void testFileUpload() throws AVException {
     FileChooserDialog dialog = new FileChooserDialog(this);
     dialog.show();
     dialog.addListener(new FileChooserDialog.OnFileSelectedListener() {
       public void onFileSelected(Dialog source, File file) {
         source.hide();
-        FileDemoActivity.this.uploadFileImpl(file);
+        byte[] data = readFile(file);
+        if (data == null) {
+          Toast.makeText(FileDemoActivity.this, "File is too big to upload.", Toast.LENGTH_LONG).show();
+          return;
+        }
+        final AVFile avFile = new AVFile(file.getName(), data);
+        avFile.saveInBackground(new SaveCallback() {
+          @Override
+          public void done(AVException e) {
+            FileDemoActivity.this.showMessage("", e, false);
+            if (e == null) {
+              fileUrl = avFile.getUrl();
+              objectId = avFile.getObjectId();
+            }
+            setProgressBarIndeterminateVisibility(false);
+          }
+        }, new ProgressCallback() {
+          @Override
+          public void done(Integer percentDone) {
+            LogUtil.log.d("uploading: " + percentDone);
+          }
+        });
       }
 
       public void onFileSelected(Dialog source, File folder, String name) {
@@ -80,12 +76,7 @@ public class FileDemoActivity extends DemoBaseActivity {
       return;
     }
     AVFile avFile = new AVFile("my_download_file", fileUrl, null);
-    avFile.getDataInBackground(new GetDataCallback() {
-      @Override
-      public void done(byte[] bytes, AVException e) {
-        showMessage("", e, false);
-      }
-    });
+    byte[] bytes = avFile.getData();
   }
 
   // update an object
@@ -94,18 +85,7 @@ public class FileDemoActivity extends DemoBaseActivity {
       showMessage("Please upload file at first.", null, false);
       return;
     }
-    AVFile.withObjectIdInBackground(objectId, new GetFileCallback<AVFile>() {
-      @Override
-      public void done(AVFile avFile, AVException e) {
-        avFile.deleteInBackground(new DeleteCallback() {
-          @Override
-          public void done(AVException e) {
-            showMessage(null, e, false);
-          }
-        });
-      }
-
-      ;
-    });
+    AVFile avFile = AVFile.withObjectId(objectId);
+    avFile.delete();
   }
 }

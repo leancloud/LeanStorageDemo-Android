@@ -1,69 +1,44 @@
 package com.example.avoscloud_demo.demo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import com.avos.avoscloud.*;
-import com.example.avoscloud_demo.*;
-import com.example.avoscloud_demo.R;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.SignUpCallback;
+import com.example.avoscloud_demo.DemoBaseActivity;
 
 public class UserDemoActivity extends DemoBaseActivity {
 
-  private void signUpImpl(final String username, final String password) {
-    AVUser.logOut();
-    AVUser user = new AVUser();
-    user.setUsername(username);
-    user.setPassword(password);
-    user.signUpInBackground(new SignUpCallback() {
-      @Override
-      public void done(AVException e) {
-        showMessage("", e, false);
-      }
-    });
-  }
-
-  private void loginImpl(final String username, final String password) {
-    AVUser.logOut();
-    AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
-      @Override
-      public void done(AVUser avUser, AVException e) {
-        showMessage("", e, false);
-      }
-    });
-  }
-
   public void testUserSignUp() throws Exception {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    LayoutInflater inflater = LayoutInflater.from(this);
-    LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
-
-    final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
-    final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);
-
-    builder.setTitle("sign up").setPositiveButton(R.string.signup, new DialogInterface.OnClickListener() {
-
+    showInputDialog("Sign Up", new InputDialogListener() {
       @Override
-      public void onClick(DialogInterface dialog, int which) {
-        // TODO Auto-generated method stub
-        String username = userNameET.getText().toString();
-        String password = passwordET.getText().toString();
-        signUpImpl(username, password);
-      }
-    }).setNegativeButton(R.string.login, new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        String username = userNameET.getText().toString();
-        String password = passwordET.getText().toString();
-        loginImpl(username, password);
+      public void onAction(String username, String password) {
+        AVUser.logOut();
+        final AVUser user = new AVUser();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.signUpInBackground(new SignUpCallback() {
+          @Override
+          public void done(AVException e) {
+            log("注册成功 uesr:" + user);
+          }
+        });
       }
     });
-    builder.setView(layout);
-    AlertDialog ad = builder.create();
-    ad.show();
   }
 
 
+  public void testLogin() {
+    showInputDialog("Login", new InputDialogListener() {
+      @Override
+      public void onAction(String username, String password) {
+        AVUser.logOut();
+        AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
+          @Override
+          public void done(AVUser avUser, AVException e) {
+            log("登录成功 user：" + avUser.toString());
+          }
+        });
+      }
+    });
+  }
 }
