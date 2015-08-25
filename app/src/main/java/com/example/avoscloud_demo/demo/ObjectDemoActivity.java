@@ -3,9 +3,6 @@ package com.example.avoscloud_demo.demo;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import junit.framework.Assert;
 

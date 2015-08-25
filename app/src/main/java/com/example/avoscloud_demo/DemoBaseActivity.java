@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,7 +47,6 @@ public class DemoBaseActivity extends ListActivity {
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     setContentView(R.layout.demo_base);
     setupAdapter();
-    setupButtonHandlers();
   }
 
   public void setOutputTextView(TextView outputTextView) {
@@ -58,16 +57,19 @@ public class DemoBaseActivity extends ListActivity {
     this.demoRunActivity = demoRunActivity;
   }
 
-  private void setupButtonHandlers() {
-    Button button = (Button) findViewById(R.id.btn_show_source);
-    if (button != null) {
-      button.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          showSourceCode();
-        }
-      });
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_demo_group, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_source) {
+      showSourceCode();
     }
+    return super.onOptionsItemSelected(item);
   }
 
   private String getFileSourceCode() {
@@ -219,8 +221,8 @@ public class DemoBaseActivity extends ListActivity {
         builder.setTitle(title).setPositiveButton(title, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            String username = userNameET.toString();
-            String password = passwordET.toString();
+            String username = userNameET.getText().toString();
+            String password = passwordET.getText().toString();
             if (listener != null && username.length() > 0 && password.length() > 0) {
               listener.onAction(username, password);
             }

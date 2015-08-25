@@ -35,7 +35,11 @@ public class UserDemoActivity extends DemoBaseActivity {
         AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
           @Override
           public void done(AVUser avUser, AVException e) {
-            log("登录成功 user：" + avUser.toString());
+            if (e != null) {
+              log(e.getMessage());
+            } else {
+              log("登录成功 user：" + avUser.toString());
+            }
           }
         });
       }

@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.avos.avoscloud.*;
@@ -26,7 +28,6 @@ public class DemoGroupActivity extends ListActivity {
     setContentView(R.layout.main);
 
     setupAVOSCloud(false);
-    setupButtonHandlers();
     setupGroupAdapter();
   }
 
@@ -69,16 +70,19 @@ public class DemoGroupActivity extends ListActivity {
     dialog.show();
   }
 
-  private void setupButtonHandlers() {
-    Button button = (Button) findViewById(R.id.btn_config);
-    if (button != null) {
-      button.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          setupAVOSCloud(true);
-        }
-      });
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_config) {
+      setupAVOSCloud(true);
     }
+    return super.onOptionsItemSelected(item);
   }
 
   public void setupGroupAdapter() {
