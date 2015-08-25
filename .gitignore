@@ -9,4 +9,4 @@ local.properties
 .DS_Store
 manifest-merger-release-report.txt
 gradle.properties
-app/src/main/assets/*.java
+app/src/main/assets/*.file

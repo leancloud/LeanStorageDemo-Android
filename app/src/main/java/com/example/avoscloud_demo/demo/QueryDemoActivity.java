@@ -12,6 +12,33 @@ import java.util.List;
 
 public class QueryDemoActivity extends DemoBaseActivity {
 
+  public void testBasicQuery() throws AVException {
+    AVQuery<AVObject> query = new AVQuery<>("Person");
+    List<AVObject> persons = query.find();
+    log("找回了一组 Person:" + persons);
+  }
+
+  public void testGetFirstObject() throws AVException {
+    AVQuery<AVObject> query = new AVQuery<>("Person");
+    AVObject first = query.getFirst();
+    log("找回了最近更新的第一个 Person" + first);
+  }
+
+  public void testLimit() throws AVException {
+    AVQuery<AVObject> query = new AVQuery("Person");
+    query.limit(2);
+    List<AVObject> persons = query.find();
+    log("找回了两个 Person:" + persons);
+  }
+
+  public void testSkip() throws AVException {
+    AVQuery<AVObject> query = new AVQuery("Person");
+    query.orderByDescending("createdAt");
+    query.skip(3);
+    AVObject first = query.getFirst();
+    log("找回了倒数第四个创建的 Person:" + first);
+  }
+
   // create an object and query it.
   public void testObjectQuery() throws AVException {
     AVObject person1 = AVObject.create("Person");
@@ -70,6 +97,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     AVQuery innerQuery = AVUser.getQuery();
     innerQuery.whereContains("username", lastString);
     currentQuery.whereMatchesKeyInQuery("username", "username", innerQuery);
+
     List<AVUser> users = currentQuery.find();
     Assert.assertTrue(users.size() == 1);
     for (AVUser resultUser : users) {

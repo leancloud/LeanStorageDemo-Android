@@ -4,7 +4,7 @@ import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
 
 @AVClassName("Armor")
-public class SubObject extends AVObject {
+public class Armor extends AVObject {
   public String getDisplayName() {
     return getString("displayName");
   }

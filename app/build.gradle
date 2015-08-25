@@ -65,6 +65,26 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-search:v3.7.2@aar'
 }
 
+task renameFile {
+
+//
+//    doLast {
+//        file('src/main/assets/FileDemoActivity.java').renameTo(file('src/main/assets/FileDemoActivity'));
+//    }
+
+
+    File assetsDir = file 'src/main/assets';
+    FileCollection collection = files { assetsDir.listFiles() }
+    collection.each {
+        if (it.name.indexOf('java') > 0) {
+            def name = it.name.substring(0, it.name.indexOf('.'))
+            def newFile = 'src/main/assets/' + name;
+            file(it).renameTo(file(newFile))
+        }
+    }
+}
+
+
 task copySource(type: Copy) {
 //    File demoDir = file 'src/main/java/com/example/avoscloud_demo/demo';
 //    FileCollection collection = files { demoDir.listFiles() }
@@ -78,34 +98,10 @@ task copySource(type: Copy) {
 
     from 'src/main/java/com/example/avoscloud_demo/demo'
     into 'src/main/assets'
-//    rename { String fileName ->
-//        println fileName
-//        fileName.replace('.java', '')
-//    }
-//    rename 'src/main/assets/(.*).java','src/main/assets/$1'
+    rename { String fileName ->
+        fileName.replace('java', 'file')
+    }
 
 }
 
 preBuild.dependsOn copySource
-
-//task list (type: Copy){
-//    File srcDir
-//
-//    // Create a file collection using a closure
-//    FileCollection collection = files { srcDir.listFiles() }
-//
-//    srcDir = file('src/main/java/com/example/avoscloud_demo/demo')
-//    File assetsDir = file('src/main/assets/')
-////    println "Contents of $srcDir.name"
-////    collection.collect { relativePath(it) }.sort().each { println it }
-//
-//    println assetsDir
-//
-//    collection.collect {
-//        println relativePath(it)
-//        println relativePath(assetsDir)
-//        from relativePath(it)
-//        into relativePath(assetsDir)
-//    }
-//
-//}

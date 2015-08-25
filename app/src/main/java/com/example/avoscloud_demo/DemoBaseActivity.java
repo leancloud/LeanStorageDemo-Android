@@ -74,7 +74,7 @@ public class DemoBaseActivity extends ListActivity {
 
   private String getFileSourceCode() {
     try {
-      String name = this.getClass().getSimpleName() + ".java";
+      String name = this.getClass().getSimpleName() + ".file";
       InputStream inputStream = getAssets().open(name);
       String content = DemoUtils.readTextFile(inputStream);
       return content;
@@ -236,5 +236,9 @@ public class DemoBaseActivity extends ListActivity {
 
   public interface InputDialogListener {
     void onAction(final String username, final String password);
+  }
+
+  protected String getClassName() {
+    return this.getClass().getSimpleName();
   }
 }

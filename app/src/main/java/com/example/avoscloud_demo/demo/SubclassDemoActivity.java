@@ -1,15 +1,8 @@
 package com.example.avoscloud_demo.demo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import com.avos.avoscloud.*;
 import com.example.avoscloud_demo.*;
-import com.example.avoscloud_demo.R;
 import junit.framework.Assert;
 
 import static junit.framework.Assert.assertFalse;
@@ -19,7 +12,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    SubObject.registerSubclass(SubObject.class);
+    Armor.registerSubclass(Armor.class);
   }
 
   public void testSubUserSignup() throws AVException {
@@ -29,7 +22,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
         new BackgroundTask() {
           @Override
           protected void doInBack() throws Exception {
-            SubObject armor = new SubObject();
+            Armor armor = new Armor();
             armor.setDisplayName("avos cloud demo object.");
             armor.setBroken(false);
             armor.save();
@@ -82,16 +75,16 @@ public class SubclassDemoActivity extends DemoBaseActivity {
 
 
   public void testSubObject() throws Exception {
-    SubObject armor = new SubObject();
+    Armor armor = new Armor();
     String displayName = "avos cloud subclass object.";
     armor.setDisplayName(displayName);
     armor.setBroken(false);
     armor.save();
     Assert.assertFalse(armor.getObjectId().isEmpty());
 
-    AVQuery<SubObject> query = AVObject.getQuery(SubObject.class);
-    SubObject result = query.get(armor.getObjectId());
-    Assert.assertTrue(result instanceof SubObject);
+    AVQuery<Armor> query = AVObject.getQuery(Armor.class);
+    Armor result = query.get(armor.getObjectId());
+    Assert.assertTrue(result instanceof Armor);
     String value = result.getDisplayName();
     Assert.assertEquals(value, displayName);
   }
