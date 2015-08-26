@@ -15,7 +15,7 @@ public class FileDemoActivity extends DemoBaseActivity {
   private String fileUrl = null;
   private String objectId = null;
 
-  private byte[] readFile(File file) {
+  private static byte[] readFile(File file) {
     RandomAccessFile rf = null;
     byte[] data = null;
     try {

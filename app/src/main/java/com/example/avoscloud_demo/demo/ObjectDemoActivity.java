@@ -244,7 +244,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     } else {
       showMessage("", null, false);
     }
-    setProgressBarIndeterminateVisibility(false);
   }
 
   public void testObjectCreateAndQuery() throws AVException {
