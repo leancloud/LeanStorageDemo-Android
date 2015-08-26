@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.avos.avoscloud.AVObject;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -259,6 +260,18 @@ public class DemoBaseActivity extends ListActivity {
         ad.show();
       }
     });
+  }
+
+  protected  <T extends AVObject> void logValues(List<T> objects, String key) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("一组对象 ");
+    sb.append(key);
+    sb.append(" 字段的值：\n" );
+    for (AVObject obj : objects) {
+      sb.append(obj.get(key));
+      sb.append("\n");
+    }
+    log(sb.toString());
   }
 
   public interface InputDialogListener {

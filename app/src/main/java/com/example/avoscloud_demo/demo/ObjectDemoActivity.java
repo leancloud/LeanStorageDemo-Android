@@ -22,12 +22,6 @@ import java.util.Random;
 
 public class ObjectDemoActivity extends DemoBaseActivity {
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    AVObject.registerSubclass(Student.class);
-  }
-
   public void testCreateObject() throws AVException {
     Student student = new Student();
     student.setAge(12);

@@ -2,6 +2,7 @@ package com.example.avoscloud_demo;
 
 import android.app.Application;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +16,7 @@ public class DemoApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    AVObject.registerSubclass(Student.class);
   }
 
 }

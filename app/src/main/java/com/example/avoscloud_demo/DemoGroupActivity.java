@@ -94,10 +94,10 @@ public class DemoGroupActivity extends ListActivity {
   private List<String> myDemoArray() {
     List<String> array = new ArrayList<String>();
     array.add("ObjectDemoActivity");
+    array.add("QueryDemoActivity");
     array.add("UserDemoActivity");
     array.add("FileDemoActivity");
     array.add("SubclassDemoActivity");
-    array.add("QueryDemoActivity");
     return array;
   }
 
