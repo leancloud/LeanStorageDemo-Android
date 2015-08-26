@@ -3,8 +3,11 @@ package com.example.avoscloud_demo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -21,6 +24,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -284,6 +288,14 @@ public class DemoBaseActivity extends ListActivity {
     log(sb.toString());
   }
 
+  public byte[] getAvatarBytes() {
+    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output);
+    byte[] bytes = output.toByteArray();
+    return bytes;
+  }
+
   public interface InputDialogListener {
     void onAction(final String username, final String password);
   }
@@ -295,5 +307,9 @@ public class DemoBaseActivity extends ListActivity {
   protected Student getFirstStudent() throws AVException {
     AVQuery<Student> q = AVObject.getQuery(Student.class);
     return q.getFirst();
+  }
+
+  protected Context getRunningContext() {
+    return demoRunActivity;
   }
 }

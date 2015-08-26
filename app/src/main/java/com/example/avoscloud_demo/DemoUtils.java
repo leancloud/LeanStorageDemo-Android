@@ -5,8 +5,10 @@ import android.webkit.WebView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.util.Random;
 
@@ -98,5 +100,20 @@ public class DemoUtils {
     }
 
     return randomString.toString();
+  }
+
+  public static byte[] readFile(File file) {
+    RandomAccessFile rf = null;
+    byte[] data = null;
+    try {
+      rf = new RandomAccessFile(file, "r");
+      data = new byte[(int) rf.length()];
+      rf.readFully(data);
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    } finally {
+      closeQuietly(rf);
+    }
+    return data;
   }
 }

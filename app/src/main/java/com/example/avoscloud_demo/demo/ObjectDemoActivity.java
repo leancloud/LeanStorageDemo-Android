@@ -60,14 +60,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("用 objectId 创建了对象，并获取了数据：" + fetched);
   }
 
-  byte[] getAvatarBytes() {
-    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output);
-    byte[] bytes = output.toByteArray();
-    return bytes;
-  }
-
   public void testCreateObjectWithFile() throws IOException, AVException {
     AVFile avatar = new AVFile("avatar", getAvatarBytes());
 
