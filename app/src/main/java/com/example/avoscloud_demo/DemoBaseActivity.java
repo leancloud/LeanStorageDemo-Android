@@ -1,5 +1,6 @@
 package com.example.avoscloud_demo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -215,8 +216,8 @@ public class DemoBaseActivity extends ListActivity {
     }
   }
 
-  public void run(final String methodName) {
-//    setProgressBarIndeterminateVisibility(true);
+  public void runMethod(final Activity demoRunActivity, final String methodName) {
+    demoRunActivity.setProgressBarIndeterminateVisibility(true);
     new BackgroundTask() {
       @Override
       protected void doInBack() throws Exception {
@@ -226,6 +227,7 @@ public class DemoBaseActivity extends ListActivity {
 
       @Override
       protected void onPost(Exception e) {
+        demoRunActivity.setProgressBarIndeterminateVisibility(false);
         if (e != null) {
           log("Error : %s", e.toString());
         } else {

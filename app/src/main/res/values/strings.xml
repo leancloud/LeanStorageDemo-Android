@@ -23,14 +23,14 @@
     <color name="daidalos_backgroud">#000</color>
     <color name="daidalos_active_file">#fff</color>
     <color name="daidalos_inactive_file">#888</color>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="signup">Sign Up</string>
-    <string name="login">Login</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="signup">注册</string>
+    <string name="login">登录</string>
     <string name="title_activity_demo_run">DemoRunActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_run">Run</string>
-    <string name="source_code">Source</string>
-    <string name="action_config">Config</string>
+    <string name="action_run">运行</string>
+    <string name="source_code">源码</string>
+    <string name="action_config">设置</string>
 </resources>

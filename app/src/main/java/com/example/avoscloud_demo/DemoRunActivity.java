@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -17,7 +18,9 @@ public class DemoRunActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     setContentView(R.layout.activity_demo_run);
+
     webView = (WebView) findViewById(R.id.source_code_view);
     outputTextView = (TextView) findViewById(R.id.output_view);
     outputTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -54,7 +57,7 @@ public class DemoRunActivity extends Activity {
 
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_run) {
-      demoActivity.run(methodName);
+      demoActivity.runMethod(this, methodName);
       return true;
     }
 
