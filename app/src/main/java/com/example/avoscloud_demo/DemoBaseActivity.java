@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -276,6 +277,38 @@ public class DemoBaseActivity extends ListActivity {
     });
   }
 
+  protected void showSimpleInputDialog(final String title, final SimpleInputDialogListner listner) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getRunningContext());
+        final EditText editText = new EditText(getRunningContext());
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(editText);
+        builder.setTitle(title).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            String text = editText.getText().toString();
+            if (text.length() > 0 && listner != null) {
+              listner.onConfirm(text);
+            }
+          }
+        });
+        AlertDialog ad = builder.create();
+        ad.show();
+      }
+    });
+  }
+
+  protected boolean filterException(Exception e) {
+    if (e == null) {
+      return true;
+    } else {
+      log(e.getMessage());
+      return false;
+    }
+  }
+
   protected <T extends AVObject> void logObjects(List<T> objects, String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("一组对象 ");
@@ -298,6 +331,10 @@ public class DemoBaseActivity extends ListActivity {
 
   public interface InputDialogListener {
     void onAction(final String username, final String password);
+  }
+
+  public interface SimpleInputDialogListner {
+    void onConfirm(String text);
   }
 
   protected String getClassName() {

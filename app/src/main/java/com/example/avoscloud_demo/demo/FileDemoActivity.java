@@ -1,11 +1,20 @@
 package com.example.avoscloud_demo.demo;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
-import com.avos.avoscloud.*;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
+import com.example.avoscloud_demo.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -145,5 +154,34 @@ public class FileDemoActivity extends DemoBaseActivity {
 
     AVFile file = AVFile.withObjectId(first.getObjectId());
     log("从 objectId 中创建了 AVFile，并从服务器查找回了其它字段的数据，file：" + toString(file));
+  }
+
+  public void testFileMetaData() throws AVException {
+    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output);
+    byte[] bytes = output.toByteArray();
+
+    AVFile file = new AVFile("avatar", bytes);
+    file.addMetaData("width", bitmap.getWidth());
+    file.addMetaData("height", bitmap.getHeight());
+    file.save();
+
+    log("保存了文件及其 MetaData, file:" + toString(file));
+  }
+
+  AVFile saveAvatar() throws AVException {
+    byte[] bytes = getAvatarBytes();
+    AVFile file = new AVFile("avatar", bytes);
+    file.save();
+    return file;
+  }
+
+  public void testThumbnail () throws AVException {
+    AVFile avatar = saveAvatar();
+    String url = avatar.getThumbnailUrl(true, 200, 200);
+    log("最大宽度为200 、最大高度为200的缩略图 url:" + url);
+    // http://docs.qiniu.com/api/v6/image-process.html
+    log("其它图片处理见七牛文档");
   }
 }
