@@ -21,6 +21,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     List<Student> students = query.find();
     log("找回了一组 Student:" + students);
+    logThreadTips();
   }
 
   public void testGetFirstObject() throws AVException {

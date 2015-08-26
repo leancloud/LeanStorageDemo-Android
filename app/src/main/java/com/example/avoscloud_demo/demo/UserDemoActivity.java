@@ -115,6 +115,7 @@ public class UserDemoActivity extends DemoBaseActivity {
     String newPassword = "1111111";
     user.updatePassword(demoPassword, newPassword);
     log("重置密码成功，新密码为 " + newPassword);
+    logThreadTips();
   }
 
   public void testPhoneNumberRegister() {

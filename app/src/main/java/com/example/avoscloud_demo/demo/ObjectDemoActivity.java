@@ -1,19 +1,14 @@
 package com.example.avoscloud_demo.demo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.R;
 import com.example.avoscloud_demo.Student;
 import junit.framework.Assert;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +23,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     student.setName("Mike");
     student.save();
     log("保存了一个学生：" + student);
+    logThreadTips();
   }
 
   public void testUpdateObject() throws AVException {

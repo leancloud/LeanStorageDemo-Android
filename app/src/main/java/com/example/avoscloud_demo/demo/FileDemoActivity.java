@@ -106,6 +106,7 @@ public class FileDemoActivity extends DemoBaseActivity {
     AVFile file = new AVFile("testCreateFileFromBytes", getAvatarBytes());
     file.save();
     log("从 bytes 中创建了文件 file:" + toString(file));
+    logThreadTips();
   }
 
   private File createCacheFile(String name) throws IOException {

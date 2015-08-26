@@ -349,4 +349,8 @@ public class DemoBaseActivity extends ListActivity {
   protected Context getRunningContext() {
     return demoRunActivity;
   }
+
+  protected void logThreadTips() {
+    log("请注意这里的例子是运行在后台线程的，所以可以去请求网络阻塞线程，若在主线程调用请用 xxxInBackground 方法");
+  }
 }
