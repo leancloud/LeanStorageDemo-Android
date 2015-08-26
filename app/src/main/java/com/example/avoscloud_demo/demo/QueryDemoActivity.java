@@ -50,7 +50,8 @@ public class QueryDemoActivity extends DemoBaseActivity {
     query.whereStartsWith(Student.NAME, "M");
 
     List<Student> students = query.find();
-    log("名字不是 Mike 但 M 开头的学生：" + students);
+    log("名字不是 Mike 但 M 开头的学生：");
+    logObjects(students, Student.NAME);
   }
 
   public void testOrQuery() throws AVException {
@@ -66,7 +67,8 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
     AVQuery<Student> query = AVQuery.or(queries);
     List<Student> students = query.find();
-    log("名字是 Mike 且 J 开头的学生：" + students);
+    log("名字是 Mike 或 J 开头的学生：");
+    logObjects(students, Student.NAME);
   }
 
   public void testAscending() throws AVException {
@@ -75,7 +77,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
         .limit(5);
     List<Student> students = query.find();
     log("找出了5个最早创建的学生");
-    logValues(students, Student.CREATED_AT);
+    logObjects(students, Student.CREATED_AT);
   }
 
   public void testSecondOrder() throws AVException {
@@ -85,8 +87,8 @@ public class QueryDemoActivity extends DemoBaseActivity {
         .limit(5);
     List<Student> students = query.find();
     log("找回了名字排序靠后，年龄最大的五个学生 ");
-    logValues(students, Student.NAME);
-    logValues(students, Student.AGE);
+    logObjects(students, Student.NAME);
+    logObjects(students, Student.AGE);
   }
 
   public void testArraySize() throws AVException {
@@ -95,7 +97,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
         .limit(10);
     List<Student> students = query.find();
     log("找回了爱好有两个的学生：");
-    logValues(students, Student.HOBBIES);
+    logObjects(students, Student.HOBBIES);
   }
 
   public void testContainedIn() throws AVException {
@@ -103,7 +105,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     query.whereContainedIn(Student.NAME, Arrays.asList("Mike", "Jane"));
     List<Student> students = query.find();
     log("找回了名字是 Mike 或 Jane 的学生");
-    logValues(students, Student.NAME);
+    logObjects(students, Student.NAME);
   }
 
   public void testContainAll() throws AVException {
@@ -111,7 +113,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     query.whereContainsAll(Student.HOBBIES, Arrays.asList("swimming", "running"));
     List<Student> students = query.find();
     log("找回了爱好至少有 swimming 和 running 的学生：");
-    logValues(students, Student.HOBBIES);
+    logObjects(students, Student.HOBBIES);
   }
 
   public void testLimitSize() throws AVException {
@@ -127,7 +129,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     query.whereMatches(Student.NAME, "^M.*");
     List<Student> students = query.find();
     log("名字满足正则表达式 ^M.* 的学生：");
-    logValues(students, Student.NAME);
+    logObjects(students, Student.NAME);
   }
 
   public void testOneKeyMultipleCondition() throws AVException {
@@ -137,7 +139,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
         .whereContains(Student.NAME, "i");
     List<Student> students = query.find();
     log("名字以 M 开头、e 结尾、含有 i 的学生：");
-    logValues(students, Student.NAME);
+    logObjects(students, Student.NAME);
   }
 
   // create an object and query it.

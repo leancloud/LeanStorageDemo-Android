@@ -262,7 +262,7 @@ public class DemoBaseActivity extends ListActivity {
     });
   }
 
-  protected  <T extends AVObject> void logValues(List<T> objects, String key) {
+  protected  <T extends AVObject> void logObjects(List<T> objects, String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("一组对象 ");
     sb.append(key);
