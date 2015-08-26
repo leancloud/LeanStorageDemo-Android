@@ -16,30 +16,30 @@ import java.util.List;
 public class QueryDemoActivity extends DemoBaseActivity {
 
   public void testBasicQuery() throws AVException {
-    AVQuery<AVObject> query = new AVQuery<>("Person");
-    List<AVObject> persons = query.find();
-    log("找回了一组 Person:" + persons);
+    AVQuery<Student> query = AVQuery.getQuery(Student.class);
+    List<Student> students = query.find();
+    log("找回了一组 Student:" + students);
   }
 
   public void testGetFirstObject() throws AVException {
-    AVQuery<AVObject> query = new AVQuery<>("Person");
-    AVObject first = query.getFirst();
-    log("找回了最近更新的第一个 Person" + first);
+    AVQuery<Student> query = AVQuery.getQuery(Student.class);
+    Student student = query.getFirst();
+    log("找回了最近更新的第一个 Student" + student);
   }
 
   public void testLimit() throws AVException {
-    AVQuery<AVObject> query = new AVQuery("Person");
+    AVQuery<Student> query = AVQuery.getQuery(Student.class);
     query.limit(2);
-    List<AVObject> persons = query.find();
-    log("找回了两个 Person:" + persons);
+    List<Student> students = query.find();
+    log("找回了两个学生:" + students);
   }
 
   public void testSkip() throws AVException {
-    AVQuery<AVObject> query = new AVQuery<>("Person");
+    AVQuery<Student> query = AVQuery.getQuery(Student.class);
     query.orderByDescending("createdAt");
     query.skip(3);
-    AVObject first = query.getFirst();
-    log("找回了倒数第四个创建的 Person:" + first);
+    Student first = query.getFirst();
+    log("找回了倒数第四个创建的 Student:" + first);
   }
 
   public void testAndQuery() throws AVException {
