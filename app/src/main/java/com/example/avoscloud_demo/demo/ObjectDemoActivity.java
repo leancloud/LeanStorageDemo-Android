@@ -30,11 +30,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("保存了一个学生：" + student);
   }
 
-  public Student getFirstStudent() throws AVException {
-    AVQuery<Student> q = AVObject.getQuery(Student.class);
-    return q.getFirst();
-  }
-
   public void testUpdateObject() throws AVException {
     Student student = getFirstStudent();
     log("更改前学生的年龄：" + student.getAge());

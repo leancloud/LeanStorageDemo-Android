@@ -17,9 +17,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -229,7 +232,12 @@ public class DemoBaseActivity extends ListActivity {
       protected void onPost(Exception e) {
         demoRunActivity.setProgressBarIndeterminateVisibility(false);
         if (e != null) {
-          log("Error : %s", e.toString());
+          if (e instanceof InvocationTargetException) {
+            // 打印原方法抛出的异常
+            log("Error : %s", e.getCause().getMessage());
+          } else {
+            log("Error : %s", e.getMessage());
+          }
         } else {
           log("%s Finished.", methodName);
         }
@@ -264,11 +272,11 @@ public class DemoBaseActivity extends ListActivity {
     });
   }
 
-  protected  <T extends AVObject> void logObjects(List<T> objects, String key) {
+  protected <T extends AVObject> void logObjects(List<T> objects, String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("一组对象 ");
     sb.append(key);
-    sb.append(" 字段的值：\n" );
+    sb.append(" 字段的值：\n");
     for (AVObject obj : objects) {
       sb.append(obj.get(key));
       sb.append("\n");
@@ -282,5 +290,10 @@ public class DemoBaseActivity extends ListActivity {
 
   protected String getClassName() {
     return this.getClass().getSimpleName();
+  }
+
+  protected Student getFirstStudent() throws AVException {
+    AVQuery<Student> q = AVObject.getQuery(Student.class);
+    return q.getFirst();
   }
 }

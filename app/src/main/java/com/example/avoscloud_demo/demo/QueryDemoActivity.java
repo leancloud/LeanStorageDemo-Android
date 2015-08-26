@@ -1,9 +1,11 @@
 package com.example.avoscloud_demo.demo;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
 import com.example.avoscloud_demo.Student;
@@ -108,7 +110,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     logObjects(students, Student.NAME);
   }
 
-  public void testContainAll() throws AVException {
+  public void testContainsAll() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     query.whereContainsAll(Student.HOBBIES, Arrays.asList("swimming", "running"));
     List<Student> students = query.find();
@@ -140,6 +142,143 @@ public class QueryDemoActivity extends DemoBaseActivity {
     List<Student> students = query.find();
     log("名字以 M 开头、e 结尾、含有 i 的学生：");
     logObjects(students, Student.NAME);
+  }
+
+  public void testLastModifyEnabled() throws AVException {
+    // 应该放在 Application 的 onCreate 中，开启全局省流量模式
+    AVOSCloud.setLastModifyEnabled(true);
+
+    Student student = getFirstStudent();
+
+    // 此处服务器应该返回了所有数据
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    Student student1 = q.get(student.getObjectId());
+    log("从服务器获取了对象：" + student1);
+
+    // 客户端把该对象的 udpatedAt 传给服务器，服务器判断对象未改变，于是返回 304 和空数据，客户端返回本地缓存的数据，节省流量
+    Student student2 = q.get(student.getObjectId());
+    log("对象的更新时间戳和服务器的愈合，从本地获取了对象：" + student2);
+  }
+
+  public void testLastModifyEnabled2() throws AVException {
+    // 应该放在 Application 的 onCreate 中，开启全局省流量模式
+    AVOSCloud.setLastModifyEnabled(true);
+
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.limit(5);
+    // 此处服务器应该返回了所有数据
+    List<Student> students = q.find();
+    log("从服务器获取了对象：" + students);
+
+    // 服务器记录表的修改时间，如果两次查询之间表未被修改且参数一样，则以下查询将从本地缓存获取数据
+    List<Student> students1 = q.find();
+    log("前后之间，Student 表未被改动，从本地获取了对象：" + students1);
+  }
+
+  public void testQueryPolicyCacheThenNetwork() {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.setCachePolicy(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    q.findInBackground(new FindCallback<Student>() {
+      int count = 0;
+
+      @Override
+      public void done(List<Student> list, AVException e) {
+        if (count == 0) {
+          log("第一次从缓存中获取了结果：" + list);
+        } else {
+          log("第二次从网络获取了结果：" + list);
+        }
+        count++;
+      }
+    });
+  }
+
+  public void testQueryPolicyCacheElseNetwork() throws AVException {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.setCachePolicy(AVQuery.CachePolicy.CACHE_ELSE_NETWORK);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    if (q.hasCachedResult()) {
+      log("有本地缓存，将从本地获取");
+    } else {
+      log("无本地缓存，将从服务器获取");
+    }
+    List<Student> students = q.find();
+    log("查找结果为：" + students);
+  }
+
+  public void testQueryPolicyNetworkElseCache() throws AVException {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    if (q.hasCachedResult()) {
+      log("有本地缓存，无网络时将从本地获取");
+    } else {
+      log("无本地缓存，将从服务器获取");
+    }
+    List<Student> students = q.find();
+    log("查找结果为：" + students);
+    log("此时有本地缓存了，关闭网络时运行此例子，将从本地缓存中获取结果");
+  }
+
+  public void testQueryPolicyNetworkOnly() throws AVException {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    if (q.hasCachedResult()) {
+      log("有本地缓存，但无视之");
+    } else {
+      log("无本地缓存，也无视之");
+    }
+    List<Student> students = q.find();
+    log("从网络获取了结果：" + students);
+    log("NETWORK_ONLY 策略和默认的 IGNORE_CACHE 策略不同的是，前者会把结果保存在本地");
+  }
+
+  public void testQueryPolicyCacheOnly() throws AVException {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.setCachePolicy(AVQuery.CachePolicy.CACHE_ONLY);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    if (q.hasCachedResult()) {
+      log("有本地缓存，将从本地获取结果");
+    } else {
+      log("无本地缓存，将抛出异常，请先运行上一个例子，从网络获取结果保存到本地");
+    }
+    List<Student> students = q.find();
+    log("从本地缓存获取了结果：" + students);
+  }
+
+  public void testQueryPolicyIngoreCache() throws AVException {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    log("此策略才网络获取结果，并不保存结果到本地");
+    q.setCachePolicy(AVQuery.CachePolicy.IGNORE_CACHE);
+    // 单位毫秒
+    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
+    q.limit(1);
+    List<Student> students = q.find();
+    log("从网络缓存获取了结果：" + students);
+  }
+
+  public void clearQueryCache() {
+    AVQuery<Student> q = AVQuery.getQuery(Student.class);
+    q.limit(1);
+    q.clearCachedResult();
+    log("已删除 limit=1 className= Student 的查询缓存");
+  }
+
+  public void clearAllCache() {
+    AVQuery.clearAllCachedResults();
+    log("已删除所有的缓存");
   }
 
   // create an object and query it.
