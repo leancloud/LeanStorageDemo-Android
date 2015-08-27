@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 /**
  * 云引擎与 SDK 的交互，需要结合云引擎项目学习 https://github.com/leancloud/sdk-demo-engine/blob/master/cloud.js
- * Created by lzw on 15/8/27.
  */
 public class EngineDemoActivity extends DemoBaseActivity {
   public void testCallCloudFunction() throws AVException {
@@ -21,7 +20,7 @@ public class EngineDemoActivity extends DemoBaseActivity {
 
   public void testErrorCode() throws AVException {
     try {
-      AVCloud.callFunction("errroCode", null);
+      AVCloud.callFunction("errorCode", null);
     } catch (AVException e) {
       if (e.getCode() == 211) {
         log("云引擎返回的 Error, code：" + e.getCode() + " message:" + e.getMessage());
