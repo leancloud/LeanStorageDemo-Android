@@ -93,18 +93,19 @@ public class DemoGroupActivity extends ListActivity {
 
   private List<String> myDemoArray() {
     List<String> array = new ArrayList<String>();
-    array.add("ObjectDemoActivity");
-    array.add("QueryDemoActivity");
-    array.add("UserDemoActivity");
-    array.add("FileDemoActivity");
-    array.add("PointerDemoActivity");
-    array.add("AVRelationDemoActivity");
-    array.add("SubclassDemoActivity");
+    array.add("Object");
+    array.add("Query");
+    array.add("User");
+    array.add("File");
+    array.add("Pointer");
+    array.add("AVRelation");
+    array.add("Subclass");
+    array.add("CQL");
     return array;
   }
 
-  private String getActivityClassName(String activity) {
-    return "com.example.avoscloud_demo.demo." + activity;
+  private String getActivityClassName(String demo) {
+    return "com.example.avoscloud_demo.demo." + demo + "DemoActivity";
   }
 
   private void startActivityByName(final String className) {

@@ -18,6 +18,7 @@ public class DemoApplication extends Application {
     super.onCreate();
     AVObject.registerSubclass(Student.class);
     AVObject.registerSubclass(Post.class);
+    AVOSCloud.setDebugLogEnabled(true);
   }
 
 }
