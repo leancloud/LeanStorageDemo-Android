@@ -14,7 +14,6 @@ import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
 
 public class UserDemoActivity extends DemoBaseActivity {
-  private String demoUsername = "lzwjava";
   private String demoPassword = "123456";
 
   public void testCurrentUser() {

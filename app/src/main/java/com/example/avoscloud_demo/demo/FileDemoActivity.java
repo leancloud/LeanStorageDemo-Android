@@ -178,7 +178,7 @@ public class FileDemoActivity extends DemoBaseActivity {
     return file;
   }
 
-  public void testThumbnail () throws AVException {
+  public void testThumbnail() throws AVException {
     AVFile avatar = saveAvatar();
     String url = avatar.getThumbnailUrl(true, 200, 200);
     log("最大宽度为200 、最大高度为200的缩略图 url:" + url);
