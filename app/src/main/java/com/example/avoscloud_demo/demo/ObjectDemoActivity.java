@@ -22,7 +22,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     student.setAge(12);
     student.setName("Mike");
     student.save();
-    log("保存了一个学生：" + student);
+    log("保存了一个学生：" + prettyJSON(student));
     logThreadTips();
   }
 
@@ -38,7 +38,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     Student student = getFirstStudent();
     //删掉了第一个学生
     student.delete();
-    log("删掉了学生：" + student);
+    log("删掉了学生：" + prettyJSON(student));
 
     try {
       AVQuery<Student> query = AVQuery.getQuery(Student.class);
@@ -63,7 +63,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     student.setName(getClassName());
     student.setAvatar(avatar);
     student.save();
-    log("保存了文件，并把其作为一个字段保存到了对象。student: " + student);
+    log("保存了文件，并把其作为一个字段保存到了对象。student: " + prettyJSON(student));
   }
 
   public void testObjectParse() throws Exception {
@@ -89,7 +89,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     Student student = new Student();
     student.setName("testOfflineSave");
     student.saveEventually();
-    log("离线保存了对象：" + student);
+    log("离线保存了对象：" + prettyJSON(student));
   }
 
   public void testIncrement() throws AVException {
@@ -175,7 +175,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     }
     AVObject.saveAll(students);
 
-    log("保存了五个学生: " + students);
+    log("保存了五个学生: " + prettyJSON(students));
   }
 
   public void testSaveAllWithFile() throws AVException {
@@ -188,7 +188,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
       students.add(student);
     }
     AVObject.saveAll(students);
-    log("批量保存了一批学生及其头像，students:" + students);
+    log("批量保存了一批学生及其头像，students:" + prettyJSON(students));
   }
 
   public void testBatchUpdate() throws AVException {
@@ -197,20 +197,14 @@ public class ObjectDemoActivity extends DemoBaseActivity {
       student.setName("testBatchUpdate");
     }
     AVObject.saveAll(students);
-    log("批量更改了一批学生的名字，students:" + students);
-  }
-
-  public List<Student> findStudents() throws AVException {
-    AVQuery<Student> q = AVObject.getQuery(Student.class);
-    q.limit(5);
-    return q.find();
+    log("批量更改了一批学生的名字，students:" + prettyJSON(students));
   }
 
   public void testDeleteAll() throws AVException {
     List<Student> students = findStudents();
     AVObject.deleteAll(students);
 
-    log("删除掉了一批学生 " + students);
+    log("删除掉了一批学生 " + prettyJSON(students));
   }
 
   // create an object and query it.

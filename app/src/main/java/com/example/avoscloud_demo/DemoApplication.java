@@ -17,6 +17,7 @@ public class DemoApplication extends Application {
   public void onCreate() {
     super.onCreate();
     AVObject.registerSubclass(Student.class);
+    AVObject.registerSubclass(Post.class);
   }
 
 }

@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -329,6 +331,33 @@ public class DemoBaseActivity extends ListActivity {
     return bytes;
   }
 
+  public List<Student> findStudents() throws AVException {
+    AVQuery<Student> q = AVObject.getQuery(Student.class);
+    q.limit(5);
+    return q.find();
+  }
+
+  protected <T extends AVObject> String prettyJSON(List<T> objects) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    for (AVObject object : objects) {
+      sb.append(prettyJSON(object));
+      sb.append(",");
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
+  protected String prettyJSON(AVObject object) {
+    JSONObject jsonObject = object.toJSONObject();
+    try {
+      return jsonObject.toString(2);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return object.toString();
+    }
+  }
+
   public interface InputDialogListener {
     void onAction(final String username, final String password);
   }
@@ -343,7 +372,12 @@ public class DemoBaseActivity extends ListActivity {
 
   protected Student getFirstStudent() throws AVException {
     AVQuery<Student> q = AVObject.getQuery(Student.class);
-    return q.getFirst();
+    Student student = q.getFirst();
+    if (student == null) {
+      log("请先运行创建对象的例子，以便有对象可演示");
+      throw new IllegalStateException("can not find any object");
+    }
+    return student;
   }
 
   protected Context getRunningContext() {

@@ -20,21 +20,21 @@ public class QueryDemoActivity extends DemoBaseActivity {
   public void testBasicQuery() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     List<Student> students = query.find();
-    log("找回了一组 Student:" + students);
+    log("找回了一组 Student:" + prettyJSON(students));
     logThreadTips();
   }
 
   public void testGetFirstObject() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     Student student = query.getFirst();
-    log("找回了最近更新的第一个 Student" + student);
+    log("找回了最近更新的第一个 Student" + prettyJSON(student));
   }
 
   public void testLimit() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     query.limit(2);
     List<Student> students = query.find();
-    log("找回了两个学生:" + students);
+    log("找回了两个学生:" + prettyJSON(students));
   }
 
   public void testSkip() throws AVException {
@@ -154,11 +154,11 @@ public class QueryDemoActivity extends DemoBaseActivity {
     // 此处服务器应该返回了所有数据
     AVQuery<Student> q = AVQuery.getQuery(Student.class);
     Student student1 = q.get(student.getObjectId());
-    log("从服务器获取了对象：" + student1);
+    log("从服务器获取了对象：" + prettyJSON(student1));
 
     // 客户端把该对象的 udpatedAt 传给服务器，服务器判断对象未改变，于是返回 304 和空数据，客户端返回本地缓存的数据，节省流量
     Student student2 = q.get(student.getObjectId());
-    log("对象的更新时间戳和服务器的愈合，从本地获取了对象：" + student2);
+    log("对象的更新时间戳和服务器的愈合，从本地获取了对象：" + prettyJSON(student2));
   }
 
   public void testLastModifyEnabled2() throws AVException {
@@ -169,11 +169,11 @@ public class QueryDemoActivity extends DemoBaseActivity {
     q.limit(5);
     // 此处服务器应该返回了所有数据
     List<Student> students = q.find();
-    log("从服务器获取了对象：" + students);
+    log("从服务器获取了对象：" + prettyJSON(students));
 
     // 服务器记录表的修改时间，如果两次查询之间表未被修改且参数一样，则以下查询将从本地缓存获取数据
     List<Student> students1 = q.find();
-    log("前后之间，Student 表未被改动，从本地获取了对象：" + students1);
+    log("前后之间，Student 表未被改动，从本地获取了对象：" + prettyJSON(students1));
   }
 
   public void testQueryPolicyCacheThenNetwork() {
@@ -188,9 +188,9 @@ public class QueryDemoActivity extends DemoBaseActivity {
       @Override
       public void done(List<Student> list, AVException e) {
         if (count == 0) {
-          log("第一次从缓存中获取了结果：" + list);
+          log("第一次从缓存中获取了结果：" + prettyJSON(list));
         } else {
-          log("第二次从网络获取了结果：" + list);
+          log("第二次从网络获取了结果：" + prettyJSON(list));
         }
         count++;
       }
@@ -209,7 +209,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
       log("无本地缓存，将从服务器获取");
     }
     List<Student> students = q.find();
-    log("查找结果为：" + students);
+    log("查找结果为：" + prettyJSON(students));
   }
 
   public void testQueryPolicyNetworkElseCache() throws AVException {
@@ -224,7 +224,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
       log("无本地缓存，将从服务器获取");
     }
     List<Student> students = q.find();
-    log("查找结果为：" + students);
+    log("查找结果为：" + prettyJSON(students));
     log("此时有本地缓存了，关闭网络时运行此例子，将从本地缓存中获取结果");
   }
 
@@ -240,7 +240,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
       log("无本地缓存，也无视之");
     }
     List<Student> students = q.find();
-    log("从网络获取了结果：" + students);
+    log("从网络获取了结果：" + prettyJSON(students));
     log("NETWORK_ONLY 策略和默认的 IGNORE_CACHE 策略不同的是，前者会把结果保存在本地");
   }
 
@@ -256,7 +256,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
       log("无本地缓存，将抛出异常，请先运行上一个例子，从网络获取结果保存到本地");
     }
     List<Student> students = q.find();
-    log("从本地缓存获取了结果：" + students);
+    log("从本地缓存获取了结果：" + prettyJSON(students));
   }
 
   public void testQueryPolicyIngoreCache() throws AVException {
@@ -267,7 +267,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
     q.setMaxCacheAge(1000 * 60 * 60); // 一小时
     q.limit(1);
     List<Student> students = q.find();
-    log("从网络缓存获取了结果：" + students);
+    log("从网络缓存获取了结果：" + prettyJSON(students));
   }
 
   public void clearQueryCache() {

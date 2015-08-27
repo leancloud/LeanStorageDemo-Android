@@ -11,6 +11,8 @@ import java.util.List;
  */
 @AVClassName("Student")
 public class Student extends AVObject {
+  public static final Creator CREATOR = AVObjectCreator.instance;
+
   public static final String NAME = "name";
   public static final String AGE = "age";
   public static final String AVATAR = "avatar";
@@ -50,8 +52,6 @@ public class Student extends AVObject {
   public void setAvatar(AVFile avatar) {
     put(AVATAR, avatar);
   }
-
-  public static final Creator CREATOR = AVObjectCreator.instance;
 
   public Object getAny() {
     return get(ANY);

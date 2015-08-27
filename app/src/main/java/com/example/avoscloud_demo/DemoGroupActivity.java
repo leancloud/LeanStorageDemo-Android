@@ -97,6 +97,8 @@ public class DemoGroupActivity extends ListActivity {
     array.add("QueryDemoActivity");
     array.add("UserDemoActivity");
     array.add("FileDemoActivity");
+    array.add("PointerDemoActivity");
+    array.add("AVRelationDemoActivity");
     array.add("SubclassDemoActivity");
     return array;
   }
