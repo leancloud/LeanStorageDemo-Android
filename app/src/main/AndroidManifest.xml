@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
     package="com.example.avoscloud_demo"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="14" />
 
@@ -12,54 +13,37 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".DemoApplication"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light"
-        android:name=".DemoApplication">
+        android:theme="@android:style/Theme.Holo.Light">
         <activity
             android:name=".DemoGroupActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".demo.ObjectDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.FileDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.UserDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.SubclassDemoActivity">
-        </activity>
-        <activity
-            android:name=".SourceCodeActivity">
-        </activity>
-        <activity
-            android:name=".demo.QueryDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.PointerDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.AVRelationDemoActivity">
-        </activity>
-        <activity
-            android:name=".demo.CQLDemoActivity">
-        </activity>
+        <activity android:name=".demo.ObjectDemoActivity" />
+        <activity android:name=".demo.FileDemoActivity" />
+        <activity android:name=".demo.UserDemoActivity" />
+        <activity android:name=".demo.SubclassDemoActivity" />
+        <activity android:name=".SourceCodeActivity" />
+        <activity android:name=".demo.QueryDemoActivity" />
+        <activity android:name=".demo.PointerDemoActivity" />
+        <activity android:name=".demo.AVRelationDemoActivity" />
+        <activity android:name=".demo.CQLDemoActivity" />
+        <activity android:name=".demo.EngineDemoActivity" />
+
         <activity android:name="ar.com.daidalos.afiledialog.FileChooserActivity" />
         <activity
             android:name=".DemoRunActivity"
             android:label="@string/title_activity_demo_run"
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>
