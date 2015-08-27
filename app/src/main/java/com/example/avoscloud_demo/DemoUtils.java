@@ -1,6 +1,7 @@
 package com.example.avoscloud_demo;
 
 import android.content.Context;
+import android.text.Html;
 import android.webkit.WebView;
 
 import java.io.ByteArrayOutputStream;
@@ -23,7 +24,7 @@ public class DemoUtils {
     try {
       inputStream = context.getAssets().open("index.html");
       template = readTextFile(inputStream);
-      template = template.replace("__CODE__", code);
+      template = template.replace("__CODE__", Html.escapeHtml(code));
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

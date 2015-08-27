@@ -226,6 +226,15 @@ public class DemoBaseActivity extends ListActivity {
     }
   }
 
+  protected void fastLog(Object... objects) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < objects.length; i++) {
+      sb.append(objects[i]);
+      sb.append(" ");
+    }
+    log(sb.toString());
+  }
+
   public void runMethod(final Activity demoRunActivity, final String methodName) {
     demoRunActivity.setProgressBarIndeterminateVisibility(true);
     new BackgroundTask() {

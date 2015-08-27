@@ -2,6 +2,7 @@ package com.example.avoscloud_demo;
 
 import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVRelation;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Post extends AVObject {
   public static final String CONTENT = "content";
   public static final String AUTHOR = "author";
   public static final String LIKES = "likes";
+  public static final String REWARDS = "rewards"; // 打赏
 
   public Post() {
 
@@ -23,6 +25,7 @@ public class Post extends AVObject {
 //  Student author;
 //  String content;
 //  List<Student> likes;
+//  AVRelation<Student> rewardStudents;
 
   public Student getAuthor() {
     return getAVObject(AUTHOR);
@@ -46,5 +49,13 @@ public class Post extends AVObject {
 
   public void setLikes(List<Student> likes) {
     put(LIKES, likes);
+  }
+
+  public AVRelation<Student> getRewardStudents() {
+    return getRelation(REWARDS);
+  }
+
+  public void setRewardStudents(AVRelation<Student> rewardStudents) {
+    put(REWARDS, rewardStudents);
   }
 }
