@@ -102,6 +102,7 @@ public class DemoGroupActivity extends ListActivity {
     array.add("Subclass");
     array.add("CQL");
     array.add("Engine");
+    array.add("Other");
     return array;
   }
 
