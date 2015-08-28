@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.Student;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class OtherDemoActivity extends DemoBaseActivity {
     try {
       Student student = getFirstStudent();
       log("student:" + prettyJSON(student));
-    } catch (Exception e) {
+    } catch (AVException e) {
       log("因为设置了网络超时为 10 毫秒，所以超时了，e:" + e.getMessage());
     }
     AVOSCloud.setNetworkTimeout(AVOSCloud.DEFAULT_NETWORK_TIMEOUT);
