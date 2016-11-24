@@ -52,17 +52,17 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
-    //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.7.2'
+    // LeanCloud 基础包
+    compile('cn.leancloud.android:avoscloud-sdk:v3.+')
 
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.7.2@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    // 推送与实时聊天需要的包
+    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
 
-    //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.7.2@aar'
-    //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.7.2@aar'
+    // LeanCloud 统计包
+    compile('cn.leancloud.android:avoscloud-statistics:v3.+')
+
+    // LeanCloud 应用内搜索包
+    compile('cn.leancloud.android:avoscloud-search:v3.+@aar')
 }
 
 task renameFile {
