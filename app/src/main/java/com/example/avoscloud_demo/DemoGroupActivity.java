@@ -103,6 +103,7 @@ public class DemoGroupActivity extends ListActivity {
     array.add("CQL");
     array.add("Engine");
     array.add("Other");
+    array.add("UserAuthData");
     return array;
   }
 

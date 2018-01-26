@@ -39,6 +39,7 @@
         <activity android:name=".demo.CQLDemoActivity" />
         <activity android:name=".demo.EngineDemoActivity" />
         <activity android:name=".demo.OtherDemoActivity" />
+        <activity android:name=".demo.UserAuthDataDemoActivity" />
 
         <activity android:name="ar.com.daidalos.afiledialog.FileChooserActivity" />
         <activity
