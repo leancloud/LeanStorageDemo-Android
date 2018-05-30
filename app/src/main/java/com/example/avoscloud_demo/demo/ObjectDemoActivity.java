@@ -5,12 +5,16 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVSaveOption;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.Student;
 import junit.framework.Assert;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -26,10 +30,36 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     logThreadTips();
   }
 
+  public void testSaveWithOption() throws AVException {
+    final AVObject avObject1 = AVObject.createWithoutData("Student", "5a7a4ac8128fe1003768d2b1");
+    avObject1.fetchInBackground(new GetCallback<AVObject>() {
+      @Override
+      public void done(final AVObject avObject, AVException e) {
+        System.out.println(avObject.getUpdatedAt());
+        AVSaveOption avSaveOption = new AVSaveOption();
+        avSaveOption.query(new AVQuery("Student").whereLessThanOrEqualTo("updatedAt", avObject.getUpdatedAt()));
+        avObject.put("sss","xxx");
+        avObject.saveInBackground(avSaveOption, new SaveCallback() {
+          @Override
+          public void done(AVException e) {
+            if (e == null) {
+              avObject.toString();
+            } else {
+              e.printStackTrace();
+            }
+          }
+        });
+      }
+    });
+  }
+
   public void testUpdateObject() throws AVException {
     Student student = getFirstStudent();
     log("更改前学生的年龄：" + student.getAge());
     student.setAge(20);
+    student.add("course", "Math");
+    student.addAllUnique("course", Arrays.asList("Math", "Art"));
+    student.removeAll("course", Arrays.asList("Reading"));
     student.save();
     log("更改后学生的年龄：" + student.getAge());
   }

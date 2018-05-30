@@ -67,7 +67,8 @@ public class FileDemoActivity extends DemoBaseActivity {
               objectId = avFile.getObjectId();
               log("文件上传成功 url:" + fileUrl);
             } else {
-              log(e.getMessage());
+              e.printStackTrace();
+
             }
           }
         }, new ProgressCallback() {

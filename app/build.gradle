@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.example.avoscloud_demo"
@@ -54,16 +54,16 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
     // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v4.6.3+')
+    compile('cn.leancloud.android:avoscloud-sdk:v4.6.7')
 
     // 推送与实时聊天需要的包
-    compile('cn.leancloud.android:avoscloud-push:v4.6.3+@aar') { transitive = true }
+    compile('cn.leancloud.android:avoscloud-push:v4.6.7@aar') { transitive = true }
 
     // LeanCloud 统计包
-    compile('cn.leancloud.android:avoscloud-statistics:v4.6.3+')
+    compile('cn.leancloud.android:avoscloud-statistics:v4.6.7')
 
     // LeanCloud 应用内搜索包
-    compile('cn.leancloud.android:avoscloud-search:v4.6.3+@aar')
+    compile('cn.leancloud.android:avoscloud-search:v4.6.7@aar')
 }
 
 task renameFile {
