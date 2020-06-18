@@ -2,16 +2,21 @@ package com.example.avoscloud_demo.demo;
 
 import com.avos.avoscloud.AVAnonymousUtils;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.RequestPasswordResetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.avos.avoscloud.UpdatePasswordCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserDemoActivity extends DemoBaseActivity {
   private String demoPassword = "123456";
@@ -75,10 +80,12 @@ public class UserDemoActivity extends DemoBaseActivity {
         final AVUser user = new AVUser();
         user.setUsername(username);
         user.setPassword(password);
+        AVFile portrait = new AVFile("thumbnail", "https://tvax1.sinaimg.cn/crop.0.0.200.200.180/a8d43f7ely1fnxs86j4maj205k05k74f.jpg", null);
+        user.put("portrait", portrait);
         user.signUpInBackground(new SignUpCallback() {
           @Override
           public void done(AVException e) {
-            log("注册成功 uesr:" + user);
+            log("注册成功 uesr:" + user.toString());
           }
         });
       }
@@ -280,9 +287,24 @@ public class UserDemoActivity extends DemoBaseActivity {
   public void testAnonymousUserLogin() {
     AVAnonymousUtils.logIn(new LogInCallback<AVUser>() {
       @Override
-      public void done(AVUser avUser, AVException e) {
+      public void done(final AVUser avUser, AVException e) {
         if (filterException(e)) {
           log("创建了一个匿名用户并登录，user:" + avUser);
+          String openId = "openid";
+          String accessToken = "access_token";
+          String expiresAt = "313830732382";
+          final Map<String,Object> userAuth = new HashMap<>();
+          userAuth.put("access_token",accessToken);
+          userAuth.put("expires_in", expiresAt);
+          userAuth.put("openid",openId);
+          avUser.associateWithAuthData(userAuth, "qq", new SaveCallback() {
+            @Override
+            public void done(AVException ex) {
+              if (filterException(ex)) {
+                log("匿名用户转变为普通用户，user:" + avUser);
+              }
+            }
+          });
         }
       }
     });

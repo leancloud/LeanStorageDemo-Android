@@ -1,13 +1,18 @@
 package com.example.avoscloud_demo.demo;
 
+import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVRelation;
+import com.avos.avoscloud.AVRole;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.Post;
 import com.example.avoscloud_demo.Student;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by lzw on 15/8/27.
@@ -23,6 +28,31 @@ public class AVRelationDemoActivity extends DemoBaseActivity {
       log("请在 PointerDemoActivity 中运行创建 Post 的例子");
     }
     return first;
+  }
+
+  public void testRoleRelation() throws Exception {
+    final CountDownLatch latch = new CountDownLatch(1);
+    AVQuery<AVRole> roleQuery=new AVQuery<AVRole>("_Role");
+    roleQuery.whereEqualTo("name", "CTO");
+    roleQuery.findInBackground(new FindCallback<AVRole>() {
+      @Override
+      public void done(List<AVRole> list, AVException e) {
+        System.out.println("get target roles.");
+        AVRole administrator = list.get(0);
+        AVRelation userRelation = administrator.getUsers();
+        System.out.println(JSON.toJSONString(userRelation));
+        AVQuery<AVUser> query = userRelation.getQuery(AVUser.class);
+        query.findInBackground(new FindCallback<AVUser>() {
+          @Override
+          public void done(List<AVUser> list, AVException e) {
+            // list 就是拥有该角色权限的所有用户了。
+            System.out.println(list);
+            latch.countDown();
+          }
+        });
+      }
+    });
+    latch.await();
   }
 
   public void testRelationAddObject() throws AVException {

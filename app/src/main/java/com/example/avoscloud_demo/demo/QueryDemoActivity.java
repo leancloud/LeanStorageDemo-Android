@@ -27,7 +27,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
   public void testGetFirstObject() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
-    query.includeACL(true);
+    //query.includeACL(true);
     Student student = query.getFirst();
     log("找回了最近更新的第一个 Student" + prettyJSON(student));
   }
@@ -117,7 +117,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
   public void testContainsAll() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
     query.whereContainsAll(Student.HOBBIES, Arrays.asList("swimming", "running"));
-    query.includeACL(true);
+    //query.includeACL(true);
     List<Student> students = query.find();
     log("找回了爱好至少有 swimming 和 running 的学生：");
     logObjects(students, Student.HOBBIES);

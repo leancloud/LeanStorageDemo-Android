@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.example.avoscloud_demo"
         minSdkVersion 14
-        targetSdkVersion 14
+        targetSdkVersion 26
     }
 
     buildTypes {
@@ -50,20 +50,22 @@ android {
 }
 
 dependencies {
-//    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.alibaba:fastjson:1.2.37'
+    compile 'org.java-websocket:Java-WebSocket:1.3.9'
+    compile 'com.google.protobuf:protobuf-java:3.4.0'
+
     compile 'com.android.support:support-v4:21.0.3'
 
-    // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v4.6.7')
-
-    // 推送与实时聊天需要的包
-    compile('cn.leancloud.android:avoscloud-push:v4.6.7@aar') { transitive = true }
-
-    // LeanCloud 统计包
-    compile('cn.leancloud.android:avoscloud-statistics:v4.6.7')
-
-    // LeanCloud 应用内搜索包
-    compile('cn.leancloud.android:avoscloud-search:v4.6.7@aar')
+//    // LeanCloud 基础包
+//    compile('cn.leancloud.android:avoscloud-sdk:v3.13.4')
+//
+//    // 推送与实时聊天需要的包
+//    compile('cn.leancloud.android:avoscloud-push:v3.13.4')
+//
+//    // LeanCloud 应用内搜索包
+//    compile('cn.leancloud.android:avoscloud-search:v3.13.4')
 }
 
 task renameFile {
