@@ -2,10 +2,7 @@
 <manifest
     package="com.example.avoscloud_demo"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1"
-    android:versionName="1.0">
-
-    <uses-sdk android:minSdkVersion="14" />
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -33,10 +30,8 @@
         <activity android:name=".demo.UserDemoActivity" />
         <activity android:name=".demo.SubclassDemoActivity" />
         <activity android:name=".SourceCodeActivity" />
-        <activity android:name=".demo.QueryDemoActivity" />
         <activity android:name=".demo.PointerDemoActivity" />
         <activity android:name=".demo.AVRelationDemoActivity" />
-        <activity android:name=".demo.CQLDemoActivity" />
         <activity android:name=".demo.EngineDemoActivity" />
         <activity android:name=".demo.OtherDemoActivity" />
         <activity android:name=".demo.UserAuthDataDemoActivity" />

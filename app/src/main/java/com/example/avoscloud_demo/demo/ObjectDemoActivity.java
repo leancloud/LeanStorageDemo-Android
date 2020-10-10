@@ -1,23 +1,21 @@
 package com.example.avoscloud_demo.demo;
 
 import android.content.Intent;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVSaveOption;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.Student;
-import junit.framework.Assert;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import cn.leancloud.AVException;
+import cn.leancloud.AVFile;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVSaveOption;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class ObjectDemoActivity extends DemoBaseActivity {
 
@@ -32,23 +30,23 @@ public class ObjectDemoActivity extends DemoBaseActivity {
 
   public void testSaveWithOption() throws AVException {
     final AVObject avObject1 = AVObject.createWithoutData("Student", "5a7a4ac8128fe1003768d2b1");
-    avObject1.fetchInBackground(new GetCallback<AVObject>() {
+    avObject1.fetchInBackground().subscribe(new Observer<AVObject>() {
       @Override
-      public void done(final AVObject avObject, AVException e) {
+      public void onSubscribe(Disposable d) {
+      }
+      @Override
+      public void onNext(AVObject avObject) {
         System.out.println(avObject.getUpdatedAt());
         AVSaveOption avSaveOption = new AVSaveOption();
         avSaveOption.query(new AVQuery("Student").whereLessThanOrEqualTo("updatedAt", avObject.getUpdatedAt()));
         avObject.put("sss","xxx");
-        avObject.saveInBackground(avSaveOption, new SaveCallback() {
-          @Override
-          public void done(AVException e) {
-            if (e == null) {
-              avObject.toString();
-            } else {
-              e.printStackTrace();
-            }
-          }
-        });
+        avObject.saveInBackground(avSaveOption).subscribe();
+      }
+      @Override
+      public void onError(Throwable e) {
+      }
+      @Override
+      public void onComplete() {
       }
     });
   }
@@ -103,23 +101,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
 
     AVObject parseObject = AVObject.parseAVObject(s);
     log("从字符串中解析对象：" + parseObject);
-  }
-
-  public void testObjectIntent() throws AVException {
-    Student student = getFirstStudent();
-    Intent intent = new Intent();
-    intent.putExtra("student", student);
-
-    Student intentStudent = intent.getParcelableExtra("student");
-    log("通过 intent 传递了对象 " + intentStudent);
-  }
-
-  public void testOfflineSave() {
-    log("请在网络关闭的时候运行本方法，然后开启网络，看是否保存上");
-    Student student = new Student();
-    student.setName("testOfflineSave");
-    student.saveEventually();
-    log("离线保存了对象：" + prettyJSON(student));
   }
 
   public void testIncrement() throws AVException {
@@ -250,7 +231,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
     AVObject result = query.get(myObject.getObjectId());
     List<Number> array = result.getList(key);
-    Assert.assertTrue(array.size() == 5);
     if (array.size() != 5) {
       showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
     } else {
@@ -265,12 +245,10 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     final int targetValue = new Random().nextInt();
     gameScore.put(key, targetValue);
     int value = gameScore.getInt(key);
-    Assert.assertTrue(value == targetValue);
 
     final String targetString = "Sean Plott";
     gameScore.put("playerName", targetString);
     String stringValue = gameScore.getString("playerName");
-    Assert.assertTrue(stringValue == targetString);
     gameScore.save();
   }
 
@@ -288,7 +266,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
     AVObject result = query.get(myObject.getObjectId());
     String stringValue = (String) result.get(key);
-    Assert.assertEquals(stringValue, value);
     if (!value.equals(stringValue)) {
       showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
     } else {
@@ -303,7 +280,6 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     myObject.delete();
     AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
     AVObject result = query.get(myObject.getObjectId());
-    Assert.assertTrue(result == null);
     if (result != null) {
       showMessage("", new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
     } else {

@@ -1,17 +1,12 @@
 package com.example.avoscloud_demo.demo;
-
-import com.avos.avoscloud.AVAnonymousUtils;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.RequestMobileCodeCallback;
-import com.avos.avoscloud.RequestPasswordResetCallback;
-import com.avos.avoscloud.SignUpCallback;
-import com.avos.avoscloud.UpdatePasswordCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.DemoUtils;
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class UserDemoActivity extends DemoBaseActivity {
   private String demoPassword = "123456";
@@ -55,18 +50,25 @@ public class UserDemoActivity extends DemoBaseActivity {
     AVUser first = q.getFirst();
     log("获取了一个用户，但未登录该用户");
     first.put("city", "ShangHai");
-    try {
-      first.save();
-    } catch (AVException e) {
-      if (e.getCode() == AVException.SESSION_MISSING) {
-        log("尝试修改未登录用户的数据，发生错误：" + e.getMessage());
-      } else {
-        throw e;
+    first.saveInBackground().subscribe(new Observer<AVObject>() {
+      @Override
+      public void onSubscribe(Disposable d) {
       }
-    }
-    log("结论：不能修改未登录用户的数据");
+      @Override
+      public void onNext(AVObject avObject) {
+      }
+      @Override
+      public void onError(Throwable e) {
+        AVException avException = new AVException(e);
+        if (avException.getCode() == AVException.SESSION_MISSING) {
+          log("尝试修改未登录用户的数据，发生错误：" + e.getMessage());
+        }
+      }
+      @Override
+      public void onComplete() {
+      }
+    });
   }
-
   public void testUserSignUp() throws Exception {
     showInputDialog("Sign Up", new InputDialogListener() {
       @Override
@@ -75,10 +77,19 @@ public class UserDemoActivity extends DemoBaseActivity {
         final AVUser user = new AVUser();
         user.setUsername(username);
         user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
+        user.signUpInBackground().subscribe(new Observer<AVUser>() {
           @Override
-          public void done(AVException e) {
-            log("注册成功 uesr:" + user);
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVUser avUser) {
+            log("注册成功 uesr:" + avUser);
+          }
+          @Override
+          public void onError(Throwable e) {
+          }
+          @Override
+          public void onComplete() {
           }
         });
       }
@@ -91,139 +102,60 @@ public class UserDemoActivity extends DemoBaseActivity {
       @Override
       public void onAction(String username, String password) {
         AVUser.logOut();
-        AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
+        AVUser.logIn(username,password).subscribe(new Observer<AVUser>() {
           @Override
-          public void done(AVUser avUser, AVException e) {
-            if (e != null) {
-              log(e.getMessage());
-            } else {
-              log("登录成功 user：" + avUser.toString());
-            }
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVUser avUser) {
+            log("登录成功 user：" + avUser.toString());
+          }
+          @Override
+          public void onError(Throwable e) {
+            log(e.getMessage());
+          }
+          @Override
+          public void onComplete() {
           }
         });
       }
     });
   }
-
-  public void testOldPasswordUpdatePassword() throws AVException {
-    AVUser user = AVUser.getCurrentUser();
-    if (user == null) {
-      promptLogin();
-      return;
-    }
-    String newPassword = "1111111";
-    user.updatePassword(demoPassword, newPassword);
-    log("重置密码成功，新密码为 " + newPassword);
-    logThreadTips();
-  }
-
-  public void testPhoneNumberRegister() {
-    // 请在网站勾选 "验证注册用户手机号码" 选项，否则不会发送验证短信
-    showSimpleInputDialog("请输入手机号码来注册", new SimpleInputDialogListner() {
-      @Override
-      public void onConfirm(String text) {
-        final AVUser user = new AVUser();
-        user.setUsername(DemoUtils.getRandomString(6));
-        user.setPassword(demoPassword);
-        user.setMobilePhoneNumber(text);
-        user.signUpInBackground(new SignUpCallback() {
-          @Override
-          public void done(AVException e) {
-            if (filterException(e)) {
-              showSimpleInputDialog("验证短信已发送，请输入验证码", new SimpleInputDialogListner() {
-                @Override
-                public void onConfirm(String code) {
-                  AVUser.verifyMobilePhoneInBackground(code, new AVMobilePhoneVerifyCallback() {
-                    @Override
-                    public void done(AVException e) {
-                      if (filterException(e)) {
-                        log("注册成功, user:" + user);
-                      }
-                    }
-                  });
-                }
-              });
-            }
-          }
-        });
-      }
-    });
-  }
-
-  public void testPhoneNumberAndPasswordLogin() {
-    showSimpleInputDialog("请输入手机号码来登录", new SimpleInputDialogListner() {
-      @Override
-      public void onConfirm(String text) {
-        AVUser.loginByMobilePhoneNumberInBackground(text, demoPassword, new LogInCallback<AVUser>() {
-          @Override
-          public void done(AVUser avUser, AVException e) {
-            if (filterException(e)) {
-              log("登录成功, user:" + avUser);
-            }
-          }
-        });
-      }
-    });
-  }
-
   public void testPhoneNumberAndCodeLogin() {
     showSimpleInputDialog("请输入手机号码来登录", new SimpleInputDialogListner() {
       @Override
       public void onConfirm(final String phone) {
-        AVUser.requestLoginSmsCodeInBackground(phone, new RequestMobileCodeCallback() {
+        AVUser.requestLoginSmsCodeInBackground(phone).subscribe(new Observer<AVNull>() {
           @Override
-          public void done(AVException e) {
-            if (filterException(e)) {
-              showSimpleInputDialog("验证码已发送，请输入验证码", new SimpleInputDialogListner() {
-                @Override
-                public void onConfirm(String smsCode) {
-                  AVUser.loginBySMSCodeInBackground(phone, smsCode, new LogInCallback<AVUser>() {
-                    @Override
-                    public void done(AVUser avUser, AVException e) {
-                      if (filterException(e)) {
-                        log("登录成功, user: " + avUser);
-                      }
-                    }
-                  });
-                }
-              });
-            }
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVNull avNull) {
+            showSimpleInputDialog("验证码已发送，请输入验证码", new SimpleInputDialogListner() {
+              @Override
+              public void onConfirm(String smsCode) {
+                AVUser.signUpOrLoginByMobilePhoneInBackground(phone, smsCode).subscribe(new Observer<AVUser>() {
+                  public void onSubscribe(Disposable disposable) {}
+                  public void onNext(AVUser user) {
+                    log("登录成功, user: " + user);
+                  }
+                  public void onError(Throwable throwable) {
+                  }
+                  public void onComplete() {}
+                });
+              }
+            });
+          }
+          @Override
+          public void onError(Throwable e) {
+          }
+          @Override
+          public void onComplete() {
           }
         });
       }
     });
   }
-
-  public void testPhoneNumberResetPassword() {
-    showSimpleInputDialog("请输入需要重置密码的手机号", new SimpleInputDialogListner() {
-      @Override
-      public void onConfirm(final String phone) {
-        AVUser.requestPasswordResetBySmsCodeInBackground(phone, new RequestMobileCodeCallback() {
-          @Override
-          public void done(AVException e) {
-            if (filterException(e)) {
-              showSimpleInputDialog("短信已发送，请输入验证码来重置密码", new SimpleInputDialogListner() {
-                @Override
-                public void onConfirm(String smsCode) {
-                  final String newPassword = "abcdefg";
-                  AVUser.resetPasswordBySmsCodeInBackground(smsCode, newPassword, new UpdatePasswordCallback() {
-                    @Override
-                    public void done(AVException e) {
-                      if (filterException(e)) {
-                        log("密码更改成功，新密码 " + newPassword);
-                        log("试着用手机号和新密码登录吧");
-                      }
-                    }
-                  });
-                }
-              });
-            }
-          }
-        });
-      }
-    });
-  }
-
   public void testEmailRegister() {
     log("请确认控制台已开启注册时开启邮箱验证，这样才能收到验证邮件");
     showSimpleInputDialog("请输入您的邮箱来注册", new SimpleInputDialogListner() {
@@ -233,12 +165,19 @@ public class UserDemoActivity extends DemoBaseActivity {
         user.setUsername(text);
         user.setPassword(demoPassword);
         user.setEmail(text);
-        user.signUpInBackground(new SignUpCallback() {
+        user.signUpInBackground().subscribe(new Observer<AVUser>() {
           @Override
-          public void done(AVException e) {
-            if (filterException(e)) {
-              log("注册成功，user: " + user);
-            }
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVUser avUser) {
+            log("注册成功，user: " + avUser);
+          }
+          @Override
+          public void onError(Throwable e) {
+          }
+          @Override
+          public void onComplete() {
           }
         });
       }
@@ -249,42 +188,48 @@ public class UserDemoActivity extends DemoBaseActivity {
     showSimpleInputDialog("请输入邮箱来登录", new SimpleInputDialogListner() {
       @Override
       public void onConfirm(String text) {
-        AVUser.logInInBackground(text, demoPassword, new LogInCallback<AVUser>() {
-          @Override
-          public void done(AVUser avUser, AVException e) {
-            if (filterException(e)) {
-              log("登录成功 user:" + avUser);
-            }
+        AVUser.loginByEmail(text, demoPassword).subscribe(new Observer<AVUser>() {
+          public void onSubscribe(Disposable disposable) {
+          }
+
+          public void onNext(AVUser user) {
+            // 登录成功
+          }
+
+          public void onError(Throwable throwable) {
+            // 登录失败（可能是密码错误）
+          }
+
+          public void onComplete() {
           }
         });
       }
     });
   }
-
-  public void testEmailResetPassword() {
-    showSimpleInputDialog("请输入邮箱进行密码重置", new SimpleInputDialogListner() {
-      @Override
-      public void onConfirm(final String text) {
-        AVUser.requestPasswordResetInBackground(text, new RequestPasswordResetCallback() {
+      public void testEmailResetPassword() {
+        showSimpleInputDialog("请输入邮箱进行密码重置", new SimpleInputDialogListner() {
           @Override
-          public void done(AVException e) {
-            if (filterException(e)) {
-              log("重置密码的邮件已发送到邮箱 " + text);
-            }
+          public void onConfirm(final String text) {
+            AVUser.requestPasswordResetInBackground(text).blockingSubscribe();
+
           }
         });
       }
-    });
-  }
 
-  public void testAnonymousUserLogin() {
-    AVAnonymousUtils.logIn(new LogInCallback<AVUser>() {
-      @Override
-      public void done(AVUser avUser, AVException e) {
-        if (filterException(e)) {
-          log("创建了一个匿名用户并登录，user:" + avUser);
-        }
+      public void testAnonymousUserLogin() {
+        AVUser.logInAnonymously().subscribe(new Observer<AVUser>() {
+          public void onSubscribe(Disposable disposable) {
+          }
+
+          public void onNext(AVUser user) {
+            // user 是新的匿名用户
+          }
+
+          public void onError(Throwable throwable) {
+          }
+
+          public void onComplete() {
+          }
+        });
       }
-    });
-  }
-}
+    }
