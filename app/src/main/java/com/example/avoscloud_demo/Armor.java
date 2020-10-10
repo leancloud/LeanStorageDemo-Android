@@ -1,7 +1,8 @@
 package com.example.avoscloud_demo;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVObject;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.annotation.AVClassName;
 
 @AVClassName("Armor")
 public class Armor extends AVObject {

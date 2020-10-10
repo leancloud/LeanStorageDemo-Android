@@ -8,12 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import com.avos.avoscloud.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.leancloud.AVOSCloud;
 
 public class DemoGroupActivity extends ListActivity {
 
@@ -32,7 +33,7 @@ public class DemoGroupActivity extends ListActivity {
   private void setupAVOSCloud(boolean config) {
     if (!config) {
       AVOSCloud.initialize(getApplication(),
-          Config.APP_ID, Config.APP_KEY);
+          Config.APP_ID, Config.APP_KEY,"https://ohqhxu3m.lc-cn-n1-shared.com");
       return;
     }
     final Dialog dialog = new Dialog(this);
@@ -100,7 +101,6 @@ public class DemoGroupActivity extends ListActivity {
     array.add("Pointer");
     array.add("AVRelation");
     array.add("Subclass");
-    array.add("CQL");
     array.add("Engine");
     array.add("Other");
     array.add("UserAuthData");

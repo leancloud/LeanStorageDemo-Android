@@ -1,7 +1,8 @@
 package com.example.avoscloud_demo;
 
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
 
 public class SubUser extends AVUser {
   public AVObject getArmor() {

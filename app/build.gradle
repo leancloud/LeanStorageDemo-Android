@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.example.avoscloud_demo"
-        minSdkVersion 14
-        targetSdkVersion 14
+        targetSdkVersion 28
+        minSdkVersion 21
+
     }
 
     buildTypes {
@@ -21,7 +21,6 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-
     lintOptions {
         abortOnError false
     }
@@ -35,55 +34,25 @@ android {
         }
     }
 
-//
-//    sourceSets {
-//        main {
-//            manifest.srcFile 'src/main/AndroidManifest.xml'
-//            java.srcDirs = ['src/main/java']
-//            resources.srcDirs = ['src/main/res']
-//            res.srcDirs = ['src/main/res']
-//            assets.srcDirs = ['src/main/assets']
-//        }
-//
-//        androidTest.setRoot('tests')
-//    }
+
 }
 
 dependencies {
 //    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile 'com.android.support:support-v4:21.0.3'
-
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v4.6.7')
+    implementation 'cn.leancloud:storage-android:7.0.8'}
 
-    // 推送与实时聊天需要的包
-    compile('cn.leancloud.android:avoscloud-push:v4.6.7@aar') { transitive = true }
-
-    // LeanCloud 统计包
-    compile('cn.leancloud.android:avoscloud-statistics:v4.6.7')
-
-    // LeanCloud 应用内搜索包
-    compile('cn.leancloud.android:avoscloud-search:v4.6.7@aar')
-}
-
-task renameFile {
-
-//
-//    doLast {
-//        file('src/main/assets/FileDemoActivity.java').renameTo(file('src/main/assets/FileDemoActivity'));
-//    }
-
-
-    File assetsDir = file 'src/main/assets';
-    FileCollection collection = files { assetsDir.listFiles() }
-    collection.each {
-        if (it.name.indexOf('java') > 0) {
-            def name = it.name.substring(0, it.name.indexOf('.'))
-            def newFile = 'src/main/assets/' + name;
-            file(it).renameTo(file(newFile))
-        }
+File assetsDir = file 'src/main/assets';
+FileCollection collection = files { assetsDir.listFiles() }
+collection.each {
+    if (it.name.indexOf('java') > 0) {
+        def name = it.name.substring(0, it.name.indexOf('.'))
+        def newFile = 'src/main/assets/' + name;
+        file(it).renameTo(file(newFile))
     }
 }
+
 
 
 task copySource(type: Copy) {
@@ -106,3 +75,5 @@ task copySource(type: Copy) {
 }
 
 preBuild.dependsOn copySource
+
+

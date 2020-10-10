@@ -1,17 +1,21 @@
 package com.example.avoscloud_demo;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
+
+import android.os.Parcelable;
 
 import java.util.List;
+
+import cn.leancloud.AVFile;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVParcelableObject;
+import cn.leancloud.annotation.AVClassName;
 
 /**
  * Created by lzw on 15/8/25.
  */
 @AVClassName("Student")
 public class Student extends AVObject {
-  public static final Creator CREATOR = AVObjectCreator.instance;
+  public static final Parcelable.Creator CREATOR = AVParcelableObject.AVObjectCreator.instance;
 
   public static final String NAME = "name";
   public static final String AGE = "age";

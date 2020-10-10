@@ -6,16 +6,19 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.SaveCallback;
-import com.avos.avoscloud.SignUpCallback;
+
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.R;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.leancloud.AVException;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.LogInCallback;
+import cn.leancloud.callback.SaveCallback;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by fengjunwen on 2018/1/26.
@@ -57,61 +60,20 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
     authData.put("openid", "6A83158");
     authData.put("access_token", "DCIF");
     authData.put("platform", "weixin");
-    AVUser.loginWithAuthData(authData, "weixin_darenbangbang", new LogInCallback() {
+    AVUser.loginWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<AVUser>() {
       @Override
-      public void done(AVUser avUser, AVException e) {
-        if (null != e) {
-          log("尝试使用第三方账号登录，发生错误。cause：" + e.getMessage());
-        } else {
-          log("成功登录，当前用户：" + avUser);
-        }
+      public void onSubscribe(Disposable d) {
       }
-    });
-  }
-  public void testLoginWithAuthDataEx() {
-    final Map<String, Object> authData = new HashMap<String, Object>();
-    authData.put("expires_at", "2019-01-07T02:41:13.580Z");
-    authData.put("openid", "6A83158");
-    authData.put("access_token", "DCIF");
-    authData.put("platform", "weixin");
-    AVUser.loginWithAuthData(authData, "weixin_darenbangbang", new LogInCallback() {
       @Override
-      public void done(final AVUser avUser, AVException e) {
-        if (null != e) {
-          log("尝试使用第三方账号登录，发生错误。cause：" + e.getMessage());
-        } else {
-          log("第一次成功登录，当前用户：" + avUser.getObjectId());
-          Map<String, Object> authData2 = new HashMap<String, Object>();
-          authData2.put("expires_at", "2019-11-07T02:41:13.580Z");
-          authData2.put("openid", "6A8315fwirw328");
-          authData2.put("access_token", "Dfaef21CIF");
-          authData2.put("platform", "weixin");
-          AVUser.loginWithAuthData(authData2, "weixin_darenxiu", new LogInCallback() {
-            @Override
-            public void done(AVUser avUser2, AVException ex) {
-              if (null != ex) {
-                log("尝试使用第三方账号登录，发生错误。cause：" + ex.getMessage());
-              } else {
-                log("第二次成功登录，当前用户：" + avUser2.getObjectId());
-                AVUser.loginWithAuthData(authData, "weixin_darenbangbang", "ThisisaunionId", "weixin", true, new LogInCallback() {
-                  @Override
-                  public void done(AVUser au, AVException e2) {
-                    if (null != e2) {
-                      log("尝试使用第三方账号登录，发生错误。cause：" + e2.getMessage());
-                    } else {
-                      log("第三次成功登录，当前用户：" + au.getObjectId());
-                      if (au.getObjectId().equals(avUser.getObjectId())) {
-                        log("expected: bind to correct user with unionId");
-                      } else {
-                        log("not expected: cannot bind to correct user with unionId");
-                      }
-                    }
-                  }
-                });
-              }
-            }
-          });
-        }
+      public void onNext(AVUser avUser) {
+        log("成功登录，当前用户：" + avUser);
+      }
+      @Override
+      public void onError(Throwable e) {
+        log("尝试使用第三方账号登录，发生错误。cause：" + e.getMessage());
+      }
+      @Override
+      public void onComplete() {
       }
     });
   }
@@ -121,32 +83,43 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
         final AVUser user = new AVUser();
         user.setUsername(username);
         user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
+        user.signUpInBackground().subscribe(new Observer<AVUser>() {
           @Override
-          public void done(AVException e) {
-            if (null != e) {
-              log("用户注册失败。 cause：" + e.getMessage());
-            } else {
-              log("注册成功 uesr: " + user.getObjectId());
-              final Map<String, Object> authData = new HashMap<String, Object>();
-              authData.put("expires_at", "2019-01-07T02:41:13.580Z");
-              authData.put("openid", "6A83faefewfew158");
-              authData.put("access_token", "DCfafewerEWDWIF");
-              authData.put("platform", "weixin");
-              user.associateWithAuthData(authData, "weixin_darenbangbang", new SaveCallback() {
-                @Override
-                public void done(AVException ex) {
-                  if (null != ex) {
-                    log("第三方信息关联失败。 cause：" + ex.getMessage());
-                  } else {
-                    log("第三方信息关联成功");
-                  }
-                }
-              });
-            }
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVUser avUser) {
+            log("注册成功 uesr: " + avUser.getObjectId());
+            final Map<String, Object> authData = new HashMap<String, Object>();
+            authData.put("expires_at", "2019-01-07T02:41:13.580Z");
+            authData.put("openid", "6A83faefewfew158");
+            authData.put("access_token", "DCfafewerEWDWIF");
+            authData.put("platform", "weixin");
+            avUser.associateWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<AVUser>() {
+              @Override
+              public void onSubscribe(Disposable d) {
+              }
+              @Override
+              public void onNext(AVUser avUser) {
+                log("第三方信息关联成功");
+              }
+              @Override
+              public void onError(Throwable e) {
+                log("第三方信息关联失败。 cause：" + e.getMessage());
+              }
+              @Override
+              public void onComplete() {
+              }
+            });
+          }
+          @Override
+          public void onError(Throwable e) {
+            log("用户注册失败。 cause：" + e.getMessage());
+          }
+          @Override
+          public void onComplete() {
           }
         });
-        ;
       }
     });
   }
@@ -156,34 +129,44 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
         final AVUser user = new AVUser();
         user.setUsername(username);
         user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
+        user.signUpInBackground().subscribe(new Observer<AVUser>() {
           @Override
-          public void done(AVException e) {
-            if (null != e) {
-              log("用户注册失败。 cause：" + e.getMessage());
-            } else {
-              log("注册成功 uesr: " + user.getObjectId());
-              final Map<String, Object> authData = new HashMap<String, Object>();
-              authData.put("expires_at", "2019-01-07T02:41:13.580Z");
-              authData.put("openid", "6A83faefewfew158");
-              authData.put("access_token", "DCfafewerEWDWIF");
-              authData.put("platform", "weixin");
-              user.associateWithAuthData(authData, "weixin_darenbangbang",
-                  "ThisisAUnionIDXXX", "weixin", false,
-                  new SaveCallback() {
-                @Override
-                public void done(AVException ex) {
-                  if (null != ex) {
-                    log("第三方信息关联失败。 cause：" + ex.getMessage());
-                  } else {
-                    log("第三方信息关联成功");
-                  }
-                }
-              });
-            }
+          public void onSubscribe(Disposable d) {
+          }
+          @Override
+          public void onNext(AVUser avUser) {
+            log("注册成功 uesr: " + avUser.getObjectId());
+            final Map<String, Object> authData = new HashMap<String, Object>();
+            authData.put("expires_at", "2019-01-07T02:41:13.580Z");
+            authData.put("openid", "6A83faefewfew158");
+            authData.put("access_token", "DCfafewerEWDWIF");
+            authData.put("platform", "weixin");
+            avUser.associateWithAuthData(authData, "weixin_darenbangbang",
+                    "ThisisAUnionIDXXX", "weixin", false).subscribe(new Observer<AVUser>() {
+              @Override
+              public void onSubscribe(Disposable d) {
+              }
+              @Override
+              public void onNext(AVUser avUser) {
+                log("第三方信息关联成功");
+              }
+              @Override
+              public void onError(Throwable e) {
+                log("第三方信息关联失败。 cause：" + e.getMessage());
+              }
+              @Override
+              public void onComplete() {
+              }
+            });
+          }
+          @Override
+          public void onError(Throwable e) {
+            log("用户注册失败。 cause：" + e.getMessage());
+          }
+          @Override
+          public void onComplete() {
           }
         });
-        ;
       }
     });
   }

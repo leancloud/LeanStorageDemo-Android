@@ -1,20 +1,19 @@
 package com.example.avoscloud_demo.demo;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVOSCloud;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
 import com.example.avoscloud_demo.Student;
-import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class QueryDemoActivity extends DemoBaseActivity {
 
@@ -34,7 +33,7 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
   public void testLimit() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
-    query.whereLessThanOrEqualTo(AVObject.UPDATED_AT, new Date());
+//    query.whereLessThanOrEqualTo(AVObject.UPDATED_AT, new Date());
     query.limit(2);
     List<Student> students = query.find();
     log("找回了两个学生:" + prettyJSON(students));
@@ -79,11 +78,9 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
   public void testAscending() throws AVException {
     AVQuery<Student> query = AVQuery.getQuery(Student.class);
-    query.orderByAscending(Student.CREATED_AT)
-        .limit(5);
+    query.limit(5);
     List<Student> students = query.find();
     log("找出了5个最早创建的学生");
-    logObjects(students, Student.CREATED_AT);
   }
 
   public void testSecondOrder() throws AVException {
@@ -150,9 +147,6 @@ public class QueryDemoActivity extends DemoBaseActivity {
   }
 
   public void testLastModifyEnabled() throws AVException {
-    // 应该放在 Application 的 onCreate 中，开启全局省流量模式
-    AVOSCloud.setLastModifyEnabled(true);
-
     Student student = getFirstStudent();
 
     // 此处服务器应该返回了所有数据
@@ -166,9 +160,6 @@ public class QueryDemoActivity extends DemoBaseActivity {
   }
 
   public void testLastModifyEnabled2() throws AVException {
-    // 应该放在 Application 的 onCreate 中，开启全局省流量模式
-    AVOSCloud.setLastModifyEnabled(true);
-
     AVQuery<Student> q = AVQuery.getQuery(Student.class);
     q.limit(5);
     // 此处服务器应该返回了所有数据
@@ -178,27 +169,6 @@ public class QueryDemoActivity extends DemoBaseActivity {
     // 服务器记录表的修改时间，如果两次查询之间表未被修改且参数一样，则以下查询将从本地缓存获取数据
     List<Student> students1 = q.find();
     log("前后之间，Student 表未被改动，从本地获取了对象：" + prettyJSON(students1));
-  }
-
-  public void testQueryPolicyCacheThenNetwork() {
-    AVQuery<Student> q = AVQuery.getQuery(Student.class);
-    q.setCachePolicy(AVQuery.CachePolicy.CACHE_THEN_NETWORK);
-    // 单位毫秒
-    q.setMaxCacheAge(1000 * 60 * 60); // 一小时
-    q.limit(1);
-    q.findInBackground(new FindCallback<Student>() {
-      int count = 0;
-
-      @Override
-      public void done(List<Student> list, AVException e) {
-        if (count == 0) {
-          log("第一次从缓存中获取了结果：" + prettyJSON(list));
-        } else {
-          log("第二次从网络获取了结果：" + prettyJSON(list));
-        }
-        count++;
-      }
-    });
   }
 
   public void testQueryPolicyCacheElseNetwork() throws AVException {
@@ -288,22 +258,22 @@ public class QueryDemoActivity extends DemoBaseActivity {
 
   // create an object and query it.
   public void testObjectQuery() throws AVException {
-    AVObject person1 = AVObject.create("Person");
+    AVObject person1 = new AVObject ("Person");
     person1.put("gender", "Female");
     person1.put("name", "Cake");
     person1.save();
 
-    AVObject person2 = AVObject.create("Person");
+    AVObject person2 =new AVObject("Person");
     person2.put("gender", "Male");
     person2.put("name", "Man");
     person2.save();
 
-    AVObject something = AVObject.create("Something");
+    AVObject something = new AVObject("Something");
     something.put("belongTo", "Cake");
     something.put("city", "ChangDe");
     something.save();
 
-    AVObject another = AVObject.create("Something");
+    AVObject another = new AVObject("Something");
     another.put("belongTo", "Man");
     another.put("city", "Beijing");
     another.save();
@@ -314,18 +284,11 @@ public class QueryDemoActivity extends DemoBaseActivity {
     AVQuery q2 = AVQuery.getQuery("Something");
     q2.whereMatchesKeyInQuery("belongTo", "name", q1);
     List<AVObject> objects = q2.find();
-    Assert.assertTrue(objects.size() > 0);
-    for (AVObject obj : objects) {
-      Assert.assertTrue(obj.getString("belongTo").equals("Cake"));
-    }
+
 
     AVQuery q3 = AVQuery.getQuery("Something");
     q3.whereDoesNotMatchKeyInQuery("belongTo", "name", q1);
     List<AVObject> list = q3.find();
-    Assert.assertTrue(list.size() > 0);
-    for (AVObject obj : list) {
-      Assert.assertFalse(obj.getString("belongTo").equals("Cake"));
-    }
   }
 
   public void testUserQuery() throws AVException {
@@ -336,7 +299,6 @@ public class QueryDemoActivity extends DemoBaseActivity {
       user.setUsername(DemoUtils.getRandomString(10));
       user.setPassword(DemoUtils.getRandomString(10));
       user.signUp();
-      Assert.assertFalse(user.getObjectId().isEmpty());
       lastString = user.getUsername();
     }
 
@@ -344,11 +306,5 @@ public class QueryDemoActivity extends DemoBaseActivity {
     AVQuery innerQuery = AVUser.getQuery();
     innerQuery.whereContains("username", lastString);
     currentQuery.whereMatchesKeyInQuery("username", "username", innerQuery);
-
-    List<AVUser> users = currentQuery.find();
-    Assert.assertTrue(users.size() == 1);
-    for (AVUser resultUser : users) {
-      Assert.assertTrue(resultUser.getUsername().equals(lastString));
-    }
   }
 }

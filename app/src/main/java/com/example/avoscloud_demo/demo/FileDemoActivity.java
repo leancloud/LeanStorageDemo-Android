@@ -1,22 +1,23 @@
 package com.example.avoscloud_demo.demo;
 
 import android.app.Dialog;
+import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.ProgressCallback;
-import com.avos.avoscloud.SaveCallback;
+import cn.leancloud.AVException;
+import cn.leancloud.AVFile;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.callback.ProgressCallback;
+import cn.leancloud.callback.SaveCallback;
+
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.DemoUtils;
 import com.example.avoscloud_demo.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -59,23 +60,10 @@ public class FileDemoActivity extends DemoBaseActivity {
       public void onFileSelect(File file) {
         byte[] data = DemoUtils.readFile(file);
         final AVFile avFile = new AVFile(file.getName(), data);
-        avFile.saveInBackground(new SaveCallback() {
+        avFile.saveInBackground(new ProgressCallback() {
           @Override
-          public void done(AVException e) {
-            if (e == null) {
-              fileUrl = avFile.getUrl();
-              objectId = avFile.getObjectId();
-              log("文件上传成功 url:" + fileUrl);
-            } else {
-              e.printStackTrace();
-
-            }
-          }
-        }, new ProgressCallback() {
-          @Override
-          public void done(Integer percentDone) {
-            log("uploading: " + percentDone);
-          }
+          public void done(Integer percent) {
+            log("uploading: " + percent);          }
         });
       }
     });
@@ -92,16 +80,6 @@ public class FileDemoActivity extends DemoBaseActivity {
     log("下载文件完毕，总字节数：" + bytes.length);
   }
 
-  // 需要控制台开启权限
-  public void testFileDelete() throws Exception {
-    if (DemoUtils.isBlankString(objectId)) {
-      log("Please upload file at first.");
-      return;
-    }
-    AVFile avFile = AVFile.withObjectId(objectId);
-    avFile.delete();
-    log("删除成功，被删掉的文件的 objectId 为 " + objectId);
-  }
 
   public void testCreateFileFromBytes() throws AVException {
     AVFile file = new AVFile("testCreateFileFromBytes", getAvatarBytes());
@@ -137,27 +115,8 @@ public class FileDemoActivity extends DemoBaseActivity {
 
   String toString(AVFile file) {
     return "AVFile, url: " + file.getUrl() + " objectId:" + file.getObjectId() + " metaData" + file.getMetaData() +
-        "name:" + file.getName();
+            "name:" + file.getName();
   }
-
-  public void testCreateFileFromAVObject() throws AVException {
-    AVQuery<AVObject> q = new AVQuery<>("_File");
-    AVObject first = q.getFirst();
-    log("获取了文件 AVObject：" + first);
-
-    AVFile file = AVFile.withAVObject(first);
-    log("从 AVObject 中创建了 AVFile，file：" + toString(file));
-  }
-
-  public void testCreateFileWithObjectId() throws AVException, FileNotFoundException {
-    AVQuery<AVObject> q = new AVQuery<>("_File");
-    AVObject first = q.getFirst();
-    log("获取了文件 AVObject：" + first);
-
-    AVFile file = AVFile.withObjectId(first.getObjectId());
-    log("从 objectId 中创建了 AVFile，并从服务器查找回了其它字段的数据，file：" + toString(file));
-  }
-
   public void testFileMetaData() throws AVException {
     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
     ByteArrayOutputStream output = new ByteArrayOutputStream();

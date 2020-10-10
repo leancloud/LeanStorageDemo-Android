@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +37,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
 
 public class DemoBaseActivity extends ListActivity {
 
@@ -358,13 +360,8 @@ public class DemoBaseActivity extends ListActivity {
   }
 
   protected String prettyJSON(AVObject object) {
-    JSONObject jsonObject = object.toJSONObject();
-    try {
-      return jsonObject.toString(2);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      return object.toString();
-    }
+    String  jsonObject = object.toJSONString();
+      return jsonObject;
   }
 
   public interface InputDialogListener {

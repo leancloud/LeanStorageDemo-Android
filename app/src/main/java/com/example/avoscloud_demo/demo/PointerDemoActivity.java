@@ -1,12 +1,14 @@
 package com.example.avoscloud_demo.demo;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVQuery;
+
 import com.example.avoscloud_demo.DemoBaseActivity;
 import com.example.avoscloud_demo.Post;
 import com.example.avoscloud_demo.Student;
 
 import java.util.List;
+
+import cn.leancloud.AVException;
+import cn.leancloud.AVQuery;
 
 /**
  * Created by lzw on 15/8/27.
