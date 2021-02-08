@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -26,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".demo.ObjectDemoActivity" />
+        <activity android:name=".demo.QueryDemoActivity" />
         <activity android:name=".demo.FileDemoActivity" />
         <activity android:name=".demo.UserDemoActivity" />
         <activity android:name=".demo.SubclassDemoActivity" />

@@ -7,7 +7,6 @@ android {
         applicationId "com.example.avoscloud_demo"
         targetSdkVersion 28
         minSdkVersion 21
-
     }
 
     buildTypes {
@@ -41,7 +40,7 @@ dependencies {
 //    compile fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // LeanCloud 基础包
-    implementation 'cn.leancloud:storage-android:7.0.8'}
+    implementation 'cn.leancloud:storage-android:7.2.2'}
 
 File assetsDir = file 'src/main/assets';
 FileCollection collection = files { assetsDir.listFiles() }

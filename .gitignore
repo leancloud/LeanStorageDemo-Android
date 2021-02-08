@@ -10,4 +10,4 @@ local.properties
 manifest-merger-release-report.txt
 gradle.properties
 app/src/main/assets/*.file
-*.iml
+**/*.iml
