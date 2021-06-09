@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.leancloud.AVOSCloud;
+import cn.leancloud.LeanCloud;
 
 public class DemoGroupActivity extends ListActivity {
 
@@ -32,7 +32,7 @@ public class DemoGroupActivity extends ListActivity {
 
   private void setupAVOSCloud(boolean config) {
     if (!config) {
-      AVOSCloud.initialize(getApplication(),
+      LeanCloud.initialize(getApplication(),
           Config.APP_ID, Config.APP_KEY,"https://ohqhxu3m.lc-cn-n1-shared.com");
       return;
     }
@@ -52,7 +52,7 @@ public class DemoGroupActivity extends ListActivity {
           Toast.makeText(DemoGroupActivity.this, "Empty key.", Toast.LENGTH_LONG).show();
           return;
         }
-        AVOSCloud.initialize(getApplication(),
+        LeanCloud.initialize(getApplication(),
             appId.getText().toString(),
             clientKey.getText().toString());
       }
@@ -99,7 +99,7 @@ public class DemoGroupActivity extends ListActivity {
     array.add("User");
     array.add("File");
     array.add("Pointer");
-    array.add("AVRelation");
+    array.add("Relation");
     array.add("Subclass");
     array.add("Engine");
     array.add("Other");

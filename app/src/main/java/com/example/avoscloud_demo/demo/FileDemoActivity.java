@@ -5,10 +5,10 @@ import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
-import cn.leancloud.AVException;
-import cn.leancloud.AVFile;
-import cn.leancloud.AVObject;
-import cn.leancloud.AVQuery;
+import cn.leancloud.LCException;
+import cn.leancloud.LCFile;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCQuery;
 import cn.leancloud.callback.ProgressCallback;
 import cn.leancloud.callback.SaveCallback;
 
@@ -54,13 +54,13 @@ public class FileDemoActivity extends DemoBaseActivity {
     });
   }
 
-  public void testFileUpload() throws AVException {
+  public void testFileUpload() throws LCException {
     selectFile(new SelectFileCallback() {
       @Override
       public void onFileSelect(File file) {
         byte[] data = DemoUtils.readFile(file);
-        final AVFile avFile = new AVFile(file.getName(), data);
-        avFile.saveInBackground(new ProgressCallback() {
+        final LCFile LCFile = new LCFile(file.getName(), data);
+        LCFile.saveInBackground(new ProgressCallback() {
           @Override
           public void done(Integer percent) {
             log("uploading: " + percent);          }
@@ -70,19 +70,19 @@ public class FileDemoActivity extends DemoBaseActivity {
   }
 
   // create an object and query it.
-  public void testFileDownload() throws AVException {
+  public void testFileDownload() throws LCException {
     if (DemoUtils.isBlankString(fileUrl)) {
       log("Please upload file at first.");
       return;
     }
-    AVFile avFile = new AVFile("my_download_file", fileUrl, null);
-    byte[] bytes = avFile.getData();
+    LCFile LCFile = new LCFile("my_download_file", fileUrl, null);
+    byte[] bytes = LCFile.getData();
     log("下载文件完毕，总字节数：" + bytes.length);
   }
 
 
-  public void testCreateFileFromBytes() throws AVException {
-    AVFile file = new AVFile("testCreateFileFromBytes", getAvatarBytes());
+  public void testCreateFileFromBytes() throws LCException {
+    LCFile file = new LCFile("testCreateFileFromBytes", getAvatarBytes());
     file.save();
     log("从 bytes 中创建了文件 file:" + toString(file));
     logThreadTips();
@@ -97,33 +97,33 @@ public class FileDemoActivity extends DemoBaseActivity {
     return tmpFile;
   }
 
-  public void testCreateFileFromPath() throws IOException, AVException {
+  public void testCreateFileFromPath() throws IOException, LCException {
     File tmpFile = createCacheFile("testCreateFileFromPath");
 
-    AVFile file = AVFile.withAbsoluteLocalPath("testCreateFileFromPath", tmpFile.getAbsolutePath());
+    LCFile file = LCFile.withAbsoluteLocalPath("testCreateFileFromPath", tmpFile.getAbsolutePath());
     file.save();
-    log("从文件的路径中构造了 AVFile，并保存成功。file:" + toString(file));
+    log("从文件的路径中构造了 LCFile，并保存成功。file:" + toString(file));
   }
 
-  public void testCreateAVFileFromFile() throws IOException, AVException {
-    File tmpFile = createCacheFile("testCreateAVFileFromFile");
+  public void testCreateLCFileFromFile() throws IOException, LCException {
+    File tmpFile = createCacheFile("testCreateLCFileFromFile");
 
-    AVFile file = AVFile.withFile("testCreateAVFileFromFile", tmpFile);
+    LCFile file = LCFile.withFile("testCreateLCFileFromFile", tmpFile);
     file.save();
-    log("用文件构造了 AVFile，并保存成功。file:" + toString(file));
+    log("用文件构造了 LCFile，并保存成功。file:" + toString(file));
   }
 
-  String toString(AVFile file) {
-    return "AVFile, url: " + file.getUrl() + " objectId:" + file.getObjectId() + " metaData" + file.getMetaData() +
+  String toString(LCFile file) {
+    return "LCFile, url: " + file.getUrl() + " objectId:" + file.getObjectId() + " metaData" + file.getMetaData() +
             "name:" + file.getName();
   }
-  public void testFileMetaData() throws AVException {
+  public void testFileMetaData() throws LCException {
     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, output);
     byte[] bytes = output.toByteArray();
 
-    AVFile file = new AVFile("avatar", bytes);
+    LCFile file = new LCFile("avatar", bytes);
     file.addMetaData("width", bitmap.getWidth());
     file.addMetaData("height", bitmap.getHeight());
     file.save();
@@ -131,15 +131,15 @@ public class FileDemoActivity extends DemoBaseActivity {
     log("保存了文件及其 MetaData, file:" + toString(file));
   }
 
-  AVFile saveAvatar() throws AVException {
+  LCFile saveAvatar() throws LCException {
     byte[] bytes = getAvatarBytes();
-    AVFile file = new AVFile("avatar", bytes);
+    LCFile file = new LCFile("avatar", bytes);
     file.save();
     return file;
   }
 
-  public void testThumbnail() throws AVException {
-    AVFile avatar = saveAvatar();
+  public void testThumbnail() throws LCException {
+    LCFile avatar = saveAvatar();
     String url = avatar.getThumbnailUrl(true, 200, 200);
     log("最大宽度为200 、最大高度为200的缩略图 url:" + url);
     // http://docs.qiniu.com/api/v6/image-process.html

@@ -31,7 +31,7 @@
         <activity android:name=".demo.SubclassDemoActivity" />
         <activity android:name=".SourceCodeActivity" />
         <activity android:name=".demo.PointerDemoActivity" />
-        <activity android:name=".demo.AVRelationDemoActivity" />
+        <activity android:name=".demo.RelationDemoActivity" />
         <activity android:name=".demo.EngineDemoActivity" />
         <activity android:name=".demo.OtherDemoActivity" />
         <activity android:name=".demo.UserAuthDataDemoActivity" />

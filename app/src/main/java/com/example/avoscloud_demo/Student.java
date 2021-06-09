@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-import cn.leancloud.AVFile;
-import cn.leancloud.AVObject;
-import cn.leancloud.AVParcelableObject;
-import cn.leancloud.annotation.AVClassName;
+import cn.leancloud.LCFile;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCParcelableObject;
+import cn.leancloud.annotation.LCClassName;
 
 /**
  * Created by lzw on 15/8/25.
  */
-@AVClassName("Student")
-public class Student extends AVObject {
-  public static final Parcelable.Creator CREATOR = AVParcelableObject.AVObjectCreator.instance;
+@LCClassName("Student")
+public class Student extends LCObject {
+  public static final Parcelable.Creator CREATOR = LCParcelableObject.LCObjectCreator.instance;
 
   public static final String NAME = "name";
   public static final String AGE = "age";
@@ -29,7 +29,7 @@ public class Student extends AVObject {
 
   //  private String name;
 //  private int age;
-//  private AVFile avatar;
+//  private LCFile avatar;
 //  private Object any;
 //  List<String> hobbies;
 
@@ -49,11 +49,11 @@ public class Student extends AVObject {
     put(AGE, age);
   }
 
-  public AVFile getAvatar() {
-    return getAVFile(AVATAR);
+  public LCFile getAvatar() {
+    return getLCFile(AVATAR);
   }
 
-  public void setAvatar(AVFile avatar) {
+  public void setAvatar(LCFile avatar) {
     put(AVATAR, avatar);
   }
 

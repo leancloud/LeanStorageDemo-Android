@@ -9,17 +9,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import cn.leancloud.AVException;
-import cn.leancloud.AVFile;
-import cn.leancloud.AVObject;
-import cn.leancloud.AVQuery;
-import cn.leancloud.AVSaveOption;
+import cn.leancloud.LCException;
+import cn.leancloud.LCFile;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCQuery;
+import cn.leancloud.LCSaveOption;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class ObjectDemoActivity extends DemoBaseActivity {
 
-  public void testCreateObject() throws AVException {
+  public void testCreateObject() throws LCException {
     Student student = new Student();
     student.setAge(12);
     student.setName("Mike");
@@ -28,19 +28,19 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     logThreadTips();
   }
 
-  public void testSaveWithOption() throws AVException {
-    final AVObject avObject1 = AVObject.createWithoutData("Student", "5a7a4ac8128fe1003768d2b1");
-    avObject1.fetchInBackground().subscribe(new Observer<AVObject>() {
+  public void testSaveWithOption() throws LCException {
+    final LCObject LCObject1 = LCObject.createWithoutData("Student", "5a7a4ac8128fe1003768d2b1");
+    LCObject1.fetchInBackground().subscribe(new Observer<LCObject>() {
       @Override
       public void onSubscribe(Disposable d) {
       }
       @Override
-      public void onNext(AVObject avObject) {
-        System.out.println(avObject.getUpdatedAt());
-        AVSaveOption avSaveOption = new AVSaveOption();
-        avSaveOption.query(new AVQuery("Student").whereLessThanOrEqualTo("updatedAt", avObject.getUpdatedAt()));
-        avObject.put("sss","xxx");
-        avObject.saveInBackground(avSaveOption).subscribe();
+      public void onNext(LCObject LCObject) {
+        System.out.println(LCObject.getUpdatedAt());
+        LCSaveOption LCSaveOption = new LCSaveOption();
+        LCSaveOption.query(new LCQuery("Student").whereLessThanOrEqualTo("updatedAt", LCObject.getUpdatedAt()));
+        LCObject.put("sss","xxx");
+        LCObject.saveInBackground(LCSaveOption).subscribe();
       }
       @Override
       public void onError(Throwable e) {
@@ -51,7 +51,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     });
   }
 
-  public void testUpdateObject() throws AVException {
+  public void testUpdateObject() throws LCException {
     Student student = getFirstStudent();
     log("更改前学生的年龄：" + student.getAge());
     student.setAge(20);
@@ -62,30 +62,30 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("更改后学生的年龄：" + student.getAge());
   }
 
-  public void testDeleteObject() throws AVException {
+  public void testDeleteObject() throws LCException {
     Student student = getFirstStudent();
     //删掉了第一个学生
     student.delete();
     log("删掉了学生：" + prettyJSON(student));
 
     try {
-      AVQuery<Student> query = AVQuery.getQuery(Student.class);
+      LCQuery<Student> query = LCQuery.getQuery(Student.class);
       query.get(student.getObjectId());
     } catch (Exception e) {
       log("再次去获取这个学生，抛出异常：" + e.getMessage());
     }
   }
 
-  public void testGetObject() throws AVException {
+  public void testGetObject() throws LCException {
     Student first = getFirstStudent();
 
-    Student student = AVObject.createWithoutData(Student.class, first.getObjectId());
-    AVObject fetched = student.fetch();
+    Student student = LCObject.createWithoutData(Student.class, first.getObjectId());
+    LCObject fetched = student.fetch();
     log("用 objectId 创建了对象，并获取了数据：" + fetched);
   }
 
-  public void testCreateObjectWithFile() throws IOException, AVException {
-    AVFile avatar = new AVFile("avatar", getAvatarBytes());
+  public void testCreateObjectWithFile() throws IOException, LCException {
+    LCFile avatar = new LCFile("avatar", getAvatarBytes());
 
     Student student = new Student();
     student.setName(getClassName());
@@ -99,11 +99,11 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     String s = student.toString();
     log("将对象序列化成字符串：" + s);
 
-    AVObject parseObject = AVObject.parseAVObject(s);
+    LCObject parseObject = LCObject.parseLCObject(s);
     log("从字符串中解析对象：" + parseObject);
   }
 
-  public void testIncrement() throws AVException {
+  public void testIncrement() throws LCException {
     Student student = getFirstStudent();
     log("生日前的年龄：%d", student.getAge());
     student.increment(Student.AGE, 1);
@@ -111,7 +111,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("生日了，年龄：%d", student.getAge());
   }
 
-  public void testAnyType() throws AVException {
+  public void testAnyType() throws LCException {
     Student student = getFirstStudent();
     student.setAny(1);
     student.save();
@@ -128,7 +128,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("Any 字段保存为了Map " + student.getAny());
   }
 
-  public void testRemoveKey() throws AVException {
+  public void testRemoveKey() throws LCException {
     Student student = getFirstStudent();
     log("名字：" + student.getName());
 
@@ -137,7 +137,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("将名字字段置为空后：", student.getName());
   }
 
-  public void testArrayAddObject() throws AVException {
+  public void testArrayAddObject() throws LCException {
     Student student = getFirstStudent();
     log("添加前的爱好：" + student.getHobbies());
     List<String> hobbies = new ArrayList<>();
@@ -148,14 +148,14 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("添加了两个爱好, hobbies : " + student.getHobbies());
   }
 
-  public void testArrayAddMutipleObjects() throws AVException {
+  public void testArrayAddMutipleObjects() throws LCException {
     Student student = getFirstStudent();
     student.add(Student.HOBBIES, "swimming");
     student.save();
     log("添加了游泳爱好, hobbies : " + student.getHobbies());
   }
 
-  public void testArrayRemoveObject() throws AVException {
+  public void testArrayRemoveObject() throws LCException {
     Student student = getFirstStudent();
     log("移除爱好前，hobbies = " + student.getHobbies());
     List<String> removeHobbies = new ArrayList<>();
@@ -165,7 +165,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("移除爱好后, hobbies = " + student.getHobbies());
   }
 
-  public void testArrayAddUnique() throws AVException {
+  public void testArrayAddUnique() throws LCException {
     Student student = getFirstStudent();
     student.addUnique(Student.HOBBIES, "swimming");
     student.save();
@@ -176,7 +176,7 @@ public class ObjectDemoActivity extends DemoBaseActivity {
     log("再次 addUnique 游泳爱好, hobbies:" + student.getHobbies());
   }
 
-  public void testSaveAll() throws AVException {
+  public void testSaveAll() throws LCException {
     List<Student> students = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       Student student = new Student();
@@ -184,64 +184,64 @@ public class ObjectDemoActivity extends DemoBaseActivity {
       student.setAge(i + 10);
       students.add(student);
     }
-    AVObject.saveAll(students);
+    LCObject.saveAll(students);
 
     log("保存了五个学生: " + prettyJSON(students));
   }
 
-  public void testSaveAllWithFile() throws AVException {
+  public void testSaveAllWithFile() throws LCException {
     List<Student> students = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       Student student = new Student();
       student.setName(i + "");
-      AVFile avatar = new AVFile("avatar" + i, getAvatarBytes());
+      LCFile avatar = new LCFile("avatar" + i, getAvatarBytes());
       student.setAvatar(avatar);
       students.add(student);
     }
-    AVObject.saveAll(students);
+    LCObject.saveAll(students);
     log("批量保存了一批学生及其头像，students:" + prettyJSON(students));
   }
 
-  public void testBatchUpdate() throws AVException {
+  public void testBatchUpdate() throws LCException {
     List<Student> students = findStudents();
     for (Student student : students) {
       student.setName("testBatchUpdate");
     }
-    AVObject.saveAll(students);
+    LCObject.saveAll(students);
     log("批量更改了一批学生的名字，students:" + prettyJSON(students));
   }
 
-  public void testDeleteAll() throws AVException {
+  public void testDeleteAll() throws LCException {
     List<Student> students = findStudents();
-    AVObject.deleteAll(students);
+    LCObject.deleteAll(students);
 
     log("删除掉了一批学生 " + prettyJSON(students));
   }
 
   // create an object and query it.
-  public void testObjectSaveAndQuery() throws AVException {
+  public void testObjectSaveAndQuery() throws LCException {
     final String key = "array";
     final String objectTable = "ObjectDemoTableRead";
-    final AVObject myObject = new AVObject(objectTable);
+    final LCObject myObject = new LCObject(objectTable);
     for (int i = 0; i < 5; ++i) {
       myObject.add(key, i);
     }
     myObject.save();
 
-    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-    AVObject result = query.get(myObject.getObjectId());
+    LCQuery<LCObject> query = LCQuery.getQuery(objectTable);
+    LCObject result = query.get(myObject.getObjectId());
     List<Number> array = result.getList(key);
     if (array.size() != 5) {
-      showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+      showMessage("", new LCException(LCException.OTHER_CAUSE, "incorrect result"), false);
     } else {
       showMessage("", null, false);
     }
   }
 
-  public void testObjectCreateAndQuery() throws AVException {
+  public void testObjectCreateAndQuery() throws LCException {
     final String objectTable = "ObjectDemoTableCreate";
     final String key = "score";
-    AVObject gameScore = new AVObject(objectTable);
+    LCObject gameScore = new LCObject(objectTable);
     final int targetValue = new Random().nextInt();
     gameScore.put(key, targetValue);
     int value = gameScore.getInt(key);
@@ -253,35 +253,35 @@ public class ObjectDemoActivity extends DemoBaseActivity {
   }
 
   // update an object
-  public void testObjectUpdateAndQuery() throws AVException {
+  public void testObjectUpdateAndQuery() throws LCException {
     final String key = "update";
     final String objectTable = "ObjectDemoTableUpdate";
-    final AVObject myObject = new AVObject(objectTable);
+    final LCObject myObject = new LCObject(objectTable);
     final String value = "anotherValue";
     myObject.put(key, "myValue");
     myObject.save();
 
     myObject.put(key, value);
     myObject.save();
-    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-    AVObject result = query.get(myObject.getObjectId());
+    LCQuery<LCObject> query = LCQuery.getQuery(objectTable);
+    LCObject result = query.get(myObject.getObjectId());
     String stringValue = (String) result.get(key);
     if (!value.equals(stringValue)) {
-      showMessage("", new AVException(AVException.OTHER_CAUSE, "incorrect result"), false);
+      showMessage("", new LCException(LCException.OTHER_CAUSE, "incorrect result"), false);
     } else {
       showMessage("", null, false);
     }
   }
 
-  public void testObjectDeleteAndQuery() throws AVException {
+  public void testObjectDeleteAndQuery() throws LCException {
     final String objectTable = "ObjectDemoTableDelete";
-    final AVObject myObject = new AVObject(objectTable);
+    final LCObject myObject = new LCObject(objectTable);
     myObject.save();
     myObject.delete();
-    AVQuery<AVObject> query = AVQuery.getQuery(objectTable);
-    AVObject result = query.get(myObject.getObjectId());
+    LCQuery<LCObject> query = LCQuery.getQuery(objectTable);
+    LCObject result = query.get(myObject.getObjectId());
     if (result != null) {
-      showMessage("", new AVException(AVException.OTHER_CAUSE, "delete failed"), false);
+      showMessage("", new LCException(LCException.OTHER_CAUSE, "delete failed"), false);
     } else {
       showMessage("", null, false);
     }

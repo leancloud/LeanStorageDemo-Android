@@ -13,8 +13,8 @@ import com.example.avoscloud_demo.R;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.leancloud.AVException;
-import cn.leancloud.AVUser;
+import cn.leancloud.LCException;
+import cn.leancloud.LCUser;
 import cn.leancloud.callback.LogInCallback;
 import cn.leancloud.callback.SaveCallback;
 import io.reactivex.Observer;
@@ -60,13 +60,13 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
     authData.put("openid", "6A83158");
     authData.put("access_token", "DCIF");
     authData.put("platform", "weixin");
-    AVUser.loginWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<AVUser>() {
+    LCUser.loginWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<LCUser>() {
       @Override
       public void onSubscribe(Disposable d) {
       }
       @Override
-      public void onNext(AVUser avUser) {
-        log("成功登录，当前用户：" + avUser);
+      public void onNext(LCUser LCUser) {
+        log("成功登录，当前用户：" + LCUser);
       }
       @Override
       public void onError(Throwable e) {
@@ -80,27 +80,27 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
   public void testAssociateWithAuthData() {
     showInputDialog("Sign Up", new InputDialogListener(){
       public void onAction(final String username, final String password) {
-        final AVUser user = new AVUser();
+        final LCUser user = new LCUser();
         user.setUsername(username);
         user.setPassword(password);
-        user.signUpInBackground().subscribe(new Observer<AVUser>() {
+        user.signUpInBackground().subscribe(new Observer<LCUser>() {
           @Override
           public void onSubscribe(Disposable d) {
           }
           @Override
-          public void onNext(AVUser avUser) {
-            log("注册成功 uesr: " + avUser.getObjectId());
+          public void onNext(LCUser LCUser) {
+            log("注册成功 uesr: " + LCUser.getObjectId());
             final Map<String, Object> authData = new HashMap<String, Object>();
             authData.put("expires_at", "2019-01-07T02:41:13.580Z");
             authData.put("openid", "6A83faefewfew158");
             authData.put("access_token", "DCfafewerEWDWIF");
             authData.put("platform", "weixin");
-            avUser.associateWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<AVUser>() {
+            LCUser.associateWithAuthData(authData, "weixin_darenbangbang").subscribe(new Observer<LCUser>() {
               @Override
               public void onSubscribe(Disposable d) {
               }
               @Override
-              public void onNext(AVUser avUser) {
+              public void onNext(LCUser LCUser) {
                 log("第三方信息关联成功");
               }
               @Override
@@ -126,28 +126,28 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
   public void testAssociateWithAuthDataEx() {
     showInputDialog("Sign Up", new InputDialogListener(){
       public void onAction(final String username, final String password) {
-        final AVUser user = new AVUser();
+        final LCUser user = new LCUser();
         user.setUsername(username);
         user.setPassword(password);
-        user.signUpInBackground().subscribe(new Observer<AVUser>() {
+        user.signUpInBackground().subscribe(new Observer<LCUser>() {
           @Override
           public void onSubscribe(Disposable d) {
           }
           @Override
-          public void onNext(AVUser avUser) {
-            log("注册成功 uesr: " + avUser.getObjectId());
+          public void onNext(LCUser LCUser) {
+            log("注册成功 uesr: " + LCUser.getObjectId());
             final Map<String, Object> authData = new HashMap<String, Object>();
             authData.put("expires_at", "2019-01-07T02:41:13.580Z");
             authData.put("openid", "6A83faefewfew158");
             authData.put("access_token", "DCfafewerEWDWIF");
             authData.put("platform", "weixin");
-            avUser.associateWithAuthData(authData, "weixin_darenbangbang",
-                    "ThisisAUnionIDXXX", "weixin", false).subscribe(new Observer<AVUser>() {
+            LCUser.associateWithAuthData(authData, "weixin_darenbangbang",
+                    "ThisisAUnionIDXXX", "weixin", false).subscribe(new Observer<LCUser>() {
               @Override
               public void onSubscribe(Disposable d) {
               }
               @Override
-              public void onNext(AVUser avUser) {
+              public void onNext(LCUser LCUser) {
                 log("第三方信息关联成功");
               }
               @Override

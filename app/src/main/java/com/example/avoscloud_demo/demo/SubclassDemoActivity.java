@@ -3,10 +3,10 @@ package com.example.avoscloud_demo.demo;
 import android.os.Bundle;
 import com.example.avoscloud_demo.*;
 
-import cn.leancloud.AVException;
-import cn.leancloud.AVObject;
-import cn.leancloud.AVQuery;
-import cn.leancloud.AVUser;
+import cn.leancloud.LCException;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCQuery;
+import cn.leancloud.LCUser;
 
 public class SubclassDemoActivity extends DemoBaseActivity {
 
@@ -16,7 +16,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
     Armor.registerSubclass(Armor.class);
   }
 
-  public void testSubUserSignup() throws AVException {
+  public void testSubUserSignup() throws LCException {
     showInputDialog("Sign up", new InputDialogListener() {
       @Override
       public void onAction(final String username, final String password) {
@@ -35,7 +35,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
             subUser.setNickName(nickName);
             subUser.setArmor(armor);
             subUser.signUp();
-            AVUser.logIn(username, password, SubUser.class);
+            LCUser.logIn(username, password, SubUser.class);
           }
 
           @Override
@@ -51,10 +51,10 @@ public class SubclassDemoActivity extends DemoBaseActivity {
 //    showInputDialog("Login", new InputDialogListener() {
 //      @Override
 //      public void onAction(String username, String password) {
-//        SubUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
+//        SubUser.logInInBackground(username, password, new LogInCallback<LCUser>() {
 //          @Override
-//          public void done(AVUser avUser, AVException e) {
-//            AVUser currentUser = AVUser.getCurrentUser();
+//          public void done(LCUser LCUser, LCException e) {
+//            LCUser currentUser = LCUser.getCurrentUser();
 //            Assert.assertTrue(currentUser instanceof SubUser);
 //          }
 //        });
@@ -70,7 +70,7 @@ public class SubclassDemoActivity extends DemoBaseActivity {
     armor.setBroken(false);
     armor.save();
 
-    AVQuery<Armor> query = AVObject.getQuery(Armor.class);
+    LCQuery<Armor> query = LCObject.getQuery(Armor.class);
     Armor result = query.get(armor.getObjectId());
     String value = result.getDisplayName();
   }

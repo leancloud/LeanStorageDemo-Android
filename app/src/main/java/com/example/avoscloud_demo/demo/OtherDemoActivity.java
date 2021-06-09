@@ -7,27 +7,27 @@ import org.apache.http.conn.ConnectTimeoutException;
 
 import java.util.Date;
 
-import cn.leancloud.AVException;
-import cn.leancloud.AVOSCloud;
-import cn.leancloud.types.AVDate;
+import cn.leancloud.LCException;
+import cn.leancloud.LeanCloud;
+import cn.leancloud.types.LCDate;
 import io.reactivex.Observable;
 
 /**
  * Created by lzw on 15/8/28.
  */
 public class OtherDemoActivity extends DemoBaseActivity {
-  public void testGetSereverDate() throws AVException {
-    Observable<AVDate>  date= AVOSCloud.getServerDateInBackground();
+  public void testGetSereverDate() throws LCException {
+    Observable<LCDate>  date= LeanCloud.getServerDateInBackground();
     log("服务器时间：" + date);
   }
 
-  public void testConfigNetworkTimeout() throws AVException {
+  public void testConfigNetworkTimeout() throws LCException {
     // 得放到 Application 里
-    AVOSCloud.setNetworkTimeout(10);
+    LeanCloud.setNetworkTimeout(10);
     try {
       Student student = getFirstStudent();
       log("student:" + prettyJSON(student));
-    } catch (AVException e) {
+    } catch (LCException e) {
       log("因为设置了网络超时为 10 毫秒，所以超时了，e:" + e.getMessage());
     }
 //    AVOSCloud.setNetworkTimeout(AVOSCloud.DEFAULT_NETWORK_TIMEOUT);

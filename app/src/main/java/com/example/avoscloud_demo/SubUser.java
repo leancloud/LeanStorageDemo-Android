@@ -1,15 +1,15 @@
 package com.example.avoscloud_demo;
 
 
-import cn.leancloud.AVObject;
-import cn.leancloud.AVUser;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCUser;
 
-public class SubUser extends AVUser {
-  public AVObject getArmor() {
-    return getAVObject("armor");
+public class SubUser extends LCUser {
+  public LCObject getArmor() {
+    return getLCObject("armor");
   }
 
-  public void setArmor(AVObject armor) {
+  public void setArmor(LCObject armor) {
     this.put("armor", armor);
   }
 

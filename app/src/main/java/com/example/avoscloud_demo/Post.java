@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-import cn.leancloud.AVObject;
-import cn.leancloud.AVParcelableObject;
-import cn.leancloud.AVRelation;
-import cn.leancloud.annotation.AVClassName;
+import cn.leancloud.LCObject;
+import cn.leancloud.LCParcelableObject;
+import cn.leancloud.LCRelation;
+import cn.leancloud.annotation.LCClassName;
 
 /**
  * Created by lzw on 15/8/27.
  */
-@AVClassName("Post")
-public class Post extends AVObject {
-  public static final Parcelable.Creator CREATOR = AVParcelableObject.AVObjectCreator.instance;
+@LCClassName("Post")
+public class Post extends LCObject {
+  public static final Parcelable.Creator CREATOR = LCParcelableObject.LCObjectCreator.instance;
 
   public static final String CONTENT = "content";
   public static final String AUTHOR = "author";
@@ -29,10 +29,10 @@ public class Post extends AVObject {
 //  Student author;
 //  String content;
 //  List<Student> likes;
-//  AVRelation<Student> rewardStudents;
+//  LCRelation<Student> rewardStudents;
 
   public Student getAuthor() {
-    return getAVObject(AUTHOR);
+    return getLCObject(AUTHOR);
   }
 
   public void setAuthor(Student author) {
@@ -55,11 +55,11 @@ public class Post extends AVObject {
     put(LIKES, likes);
   }
 
-  public AVRelation<Student> getRewardStudents() {
+  public LCRelation<Student> getRewardStudents() {
     return getRelation(REWARDS);
   }
 
-  public void setRewardStudents(AVRelation<Student> rewardStudents) {
+  public void setRewardStudents(LCRelation<Student> rewardStudents) {
     put(REWARDS, rewardStudents);
   }
 }

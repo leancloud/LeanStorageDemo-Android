@@ -1,11 +1,11 @@
 package com.example.avoscloud_demo;
 
 
-import cn.leancloud.AVObject;
-import cn.leancloud.annotation.AVClassName;
+import cn.leancloud.LCObject;
+import cn.leancloud.annotation.LCClassName;
 
-@AVClassName("Armor")
-public class Armor extends AVObject {
+@LCClassName("Armor")
+public class Armor extends LCObject {
   public String getDisplayName() {
     return getString("displayName");
   }

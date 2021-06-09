@@ -2,9 +2,9 @@ package com.example.avoscloud_demo;
 
 import android.app.Application;
 
-import cn.leancloud.AVLogger;
-import cn.leancloud.AVOSCloud;
-import cn.leancloud.AVObject;
+import cn.leancloud.LCLogger;
+import cn.leancloud.LeanCloud;
+import cn.leancloud.LCObject;
 
 
 /**
@@ -19,11 +19,11 @@ public class DemoApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    AVOSCloud.setLogLevel(AVLogger.Level.DEBUG);
+    LeanCloud.setLogLevel(LCLogger.Level.DEBUG);
 
 //    AVOSCloud.setNetworkTimeout(20 * 1000);
-    AVObject.registerSubclass(Student.class);
-    AVObject.registerSubclass(Post.class);
+    LCObject.registerSubclass(Student.class);
+    LCObject.registerSubclass(Post.class);
   }
 
 }
