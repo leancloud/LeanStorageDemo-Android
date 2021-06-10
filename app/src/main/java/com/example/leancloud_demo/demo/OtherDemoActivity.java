@@ -1,11 +1,8 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.Student;
-import org.apache.http.conn.ConnectTimeoutException;
-
-import java.util.Date;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.Student;
 
 import cn.leancloud.LCException;
 import cn.leancloud.LeanCloud;

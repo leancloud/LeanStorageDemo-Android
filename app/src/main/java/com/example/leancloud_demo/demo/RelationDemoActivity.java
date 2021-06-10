@@ -1,8 +1,8 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.Post;
-import com.example.avoscloud_demo.Student;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.Post;
+import com.example.leancloud_demo.Student;
 
 import java.util.List;
 

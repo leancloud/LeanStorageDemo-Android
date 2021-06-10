@@ -1,4 +1,4 @@
-package com.example.avoscloud_demo;
+package com.example.leancloud_demo;
 
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.leancloud.LeanCloud;
 

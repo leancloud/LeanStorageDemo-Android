@@ -1,5 +1,5 @@
-package com.example.avoscloud_demo.demo;
-import com.example.avoscloud_demo.DemoBaseActivity;
+package com.example.leancloud_demo.demo;
+import com.example.leancloud_demo.DemoBaseActivity;
 import cn.leancloud.LCException;
 import cn.leancloud.LCObject;
 import cn.leancloud.LCQuery;

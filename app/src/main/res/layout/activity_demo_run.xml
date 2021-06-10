@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.avoscloud_demo.DemoRunActivity">
+    tools:context="com.example.leancloud_demo.DemoRunActivity">
 
     <WebView
         android:id="@+id/source_code_view"

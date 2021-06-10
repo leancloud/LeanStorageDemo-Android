@@ -1,8 +1,8 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.DemoUtils;
-import com.example.avoscloud_demo.Student;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.DemoUtils;
+import com.example.leancloud_demo.Student;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +12,6 @@ import cn.leancloud.LCException;
 import cn.leancloud.LCObject;
 import cn.leancloud.LCQuery;
 import cn.leancloud.LCUser;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class QueryDemoActivity extends DemoBaseActivity {
 

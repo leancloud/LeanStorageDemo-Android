@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.example.avoscloud_demo.R;
+import com.example.leancloud_demo.R;
 
 /**
  * A file chooser implemented in an Activity. 

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.example.avoscloud_demo"
+        applicationId "com.example.leancloud_demo"
         targetSdkVersion 28
         minSdkVersion 21
     }
@@ -40,7 +40,7 @@ dependencies {
 //    compile fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // LeanCloud 基础包
-    implementation 'cn.leancloud:storage-android:8.0.0'}
+    implementation 'cn.leancloud:storage-android:8.0.1'}
 
 File assetsDir = file 'src/main/assets';
 FileCollection collection = files { assetsDir.listFiles() }

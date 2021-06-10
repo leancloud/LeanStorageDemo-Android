@@ -1,4 +1,4 @@
-package com.example.avoscloud_demo;
+package com.example.leancloud_demo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,9 +21,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -269,7 +266,7 @@ public class DemoBaseActivity extends ListActivity {
       public void run() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(demoRunActivity);
         LayoutInflater inflater = LayoutInflater.from(demoRunActivity);
-        final LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
+        final LinearLayout layout = (LinearLayout) inflater.inflate(com.example.leancloud_demo.R.layout.login_dialog, null);
 
         final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
         final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);

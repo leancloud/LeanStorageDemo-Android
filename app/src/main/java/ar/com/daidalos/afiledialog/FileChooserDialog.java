@@ -30,7 +30,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import com.example.avoscloud_demo.R;
+import com.example.leancloud_demo.R;
 
 /**
  * A file chooser implemented in a Dialog. 

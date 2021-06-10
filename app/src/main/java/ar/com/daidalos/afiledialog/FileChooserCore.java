@@ -21,7 +21,6 @@ package ar.com.daidalos.afiledialog;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import ar.com.daidalos.afiledialog.view.FileItem;
-import com.example.avoscloud_demo.R;
+import com.example.leancloud_demo.R;
 
 /**
  * This class implements the common features of a file chooser.

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.avoscloud_demo.DemoRunActivity">
+    tools:context="com.example.leancloud_demo.DemoRunActivity">
     <item
         android:id="@+id/action_run"
         android:orderInCategory="100"

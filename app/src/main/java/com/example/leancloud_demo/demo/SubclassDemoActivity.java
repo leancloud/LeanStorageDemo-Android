@@ -1,7 +1,7 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
 import android.os.Bundle;
-import com.example.avoscloud_demo.*;
+import com.example.leancloud_demo.*;
 
 import cn.leancloud.LCException;
 import cn.leancloud.LCObject;

@@ -1,8 +1,7 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
-import android.content.Intent;
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.Student;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.Student;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

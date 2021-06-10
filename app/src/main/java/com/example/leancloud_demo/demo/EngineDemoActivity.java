@@ -1,16 +1,14 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.Student;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.Student;
 
 import java.util.HashMap;
 
 import cn.leancloud.LCCloud;
 import cn.leancloud.LCException;
 import cn.leancloud.LCObject;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * 云引擎与 SDK 的交互，需要结合云引擎项目学习 https://github.com/leancloud/sdk-demo-engine/blob/master/cloud.js

@@ -1,4 +1,4 @@
-package com.example.avoscloud_demo;
+package com.example.leancloud_demo;
 
 /**
  * Created by lzw on 14-8-24.

@@ -1,4 +1,4 @@
-package com.example.avoscloud_demo;
+package com.example.leancloud_demo;
 
 import android.content.Context;
 import android.text.Html;

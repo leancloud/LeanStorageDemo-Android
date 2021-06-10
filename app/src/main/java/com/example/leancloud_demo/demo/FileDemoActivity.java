@@ -1,20 +1,16 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
 import android.app.Dialog;
-import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import cn.leancloud.LCException;
 import cn.leancloud.LCFile;
-import cn.leancloud.LCObject;
-import cn.leancloud.LCQuery;
 import cn.leancloud.callback.ProgressCallback;
-import cn.leancloud.callback.SaveCallback;
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.DemoUtils;
-import com.example.avoscloud_demo.R;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.DemoUtils;
+import com.example.leancloud_demo.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

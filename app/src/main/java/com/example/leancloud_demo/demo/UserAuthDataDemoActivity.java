@@ -1,4 +1,4 @@
-package com.example.avoscloud_demo.demo;
+package com.example.leancloud_demo.demo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,16 +7,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 
-import com.example.avoscloud_demo.DemoBaseActivity;
-import com.example.avoscloud_demo.R;
+import com.example.leancloud_demo.DemoBaseActivity;
+import com.example.leancloud_demo.R;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.leancloud.LCException;
 import cn.leancloud.LCUser;
-import cn.leancloud.callback.LogInCallback;
-import cn.leancloud.callback.SaveCallback;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -34,7 +31,7 @@ public class UserAuthDataDemoActivity extends DemoBaseActivity {
       public void run() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(demoRunActivity);
         LayoutInflater inflater = LayoutInflater.from(demoRunActivity);
-        final LinearLayout layout = (LinearLayout) inflater.inflate(com.example.avoscloud_demo.R.layout.login_dialog, null);
+        final LinearLayout layout = (LinearLayout) inflater.inflate(com.example.leancloud_demo.R.layout.login_dialog, null);
 
         final EditText userNameET = (EditText) layout.findViewById(R.id.usernameInput);
         final EditText passwordET = (EditText) layout.findViewById(R.id.passwordInput);
